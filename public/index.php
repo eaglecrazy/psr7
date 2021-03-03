@@ -1,10 +1,18 @@
 <?php
-echo __DIR__ . PHP_EOL;
-echo dirname(__DIR__) . PHP_EOL;
-chdir(dirname(__DIR__));
-require 'src/Framework/Http/Request.php';
 
-$request = new Request();
+use Framework\Http\Request;
+
+chdir(dirname(__DIR__));
+require'vendor/autoload.php';
+
+### Initialization
+session_start();
+$request = (new Request())
+    ->withQueryParams($_GET)
+    ->withParsedBody($_POST);
+
+
+### Action
 
 function getLang(array $get, array $cookie, array $session, array $server, $default)
 {
@@ -20,11 +28,6 @@ function getLang(array $get, array $cookie, array $session, array $server, $defa
                 )
             );
 }
-
-session_start();
-
-
-
 
 $name = $request->getQueryParams()['name'] ?? 'Guest';
 $lang = getLang($_GET, $_COOKIE, $_SESSION, $_SERVER, 'en');

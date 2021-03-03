@@ -1,14 +1,42 @@
 <?php
 
+namespace Framework\Http;
+
+use phpDocumentor\Reflection\Types\This;
+
 class Request
 {
-    public function getQueryParams(): array
+    private $queryParams;
+
+    private $parsedBody;
+
+    public function __construct(array $queryParams = [], $parsedBody = null)
     {
-        return $_GET;
+        $this->queryParams = $queryParams;
+        $this->parsedBody  = $parsedBody;
     }
 
-    public function getParsedBody()
+    public function getQueryParams(): array
     {
-        return $_POST ?: null;
+        return $this->queryParams;
+    }
+
+    public function withQueryParams(array $query): self
+    {
+        $new              = clone $this;
+        $new->queryParams = $query;
+        return $new;
+    }
+
+    public function getParsedBody(): ?array
+    {
+        return $this->parsedBody;
+    }
+
+    public function withParsedBody($data): self
+    {
+        $new             = clone $this;
+        $new->parsedBody = $data;
+        return $new;
     }
 }
