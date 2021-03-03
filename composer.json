@@ -14,7 +14,9 @@
     },
     "require": {
         "php": ">=7.4.14",
-        "roave/security-advisories": "dev-master"
+        "psr/http-message": "^1.0",
+        "roave/security-advisories": "dev-master",
+        "zendframework/zend-diactoros": "^2.2"
     },
     "autoload": {
         "psr-4": {

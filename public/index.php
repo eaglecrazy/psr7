@@ -1,16 +1,43 @@
 <?php
 
-use Framework\Http\RequestFactory;
-use Framework\Http\Response;
+use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\ServerRequestFactory;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 ### Initialization
 session_start();
-$request = RequestFactory::fromGlobals();
+$request = ServerRequestFactory::fromGlobals();
 
 ### Action
+
+
+$name = $request->getQueryParams()['name'] ?? 'Guest';
+
+
+$response = (new HtmlResponse('Hello, ' . $name . '!'))
+    ->withHeader('X-Developer', 'eagle');
+
+###Sending
+header('HTTP/1.0' . ' ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
+
+
+foreach ($response->getHeaders() as $name => $values) {
+    header($name . ':' . implode(', ', $values));
+}
+echo $response->getBody();
+
+
+
+
+
+
+
+
+
+//$lang = getLang($_GET, $_COOKIE, $_SESSION, $_SERVER, 'en');
+
 
 //function getLang(array $get, array $cookie, array $session, array $server, $default)
 //{
@@ -26,27 +53,3 @@ $request = RequestFactory::fromGlobals();
 //                )
 //            );
 //}
-//$name = $request->getQueryParams()['name'] ?? 'Guest';
-//$lang = getLang($_GET, $_COOKIE, $_SESSION, $_SERVER, 'en');
-
-
-
-$response = (new Response('response-body'))
-    ->withHeader('X-Developer', 'eagle');
-
-###Sending
-header('HTTP/1.0' . ' ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
-
-
-foreach ($response->getHeaders() as $name => $value) {
-    header($name . ':' . $value);
-}
-echo $response->getBody();
-
-
-ЗАКОНЧИЛ НА 1-43
-
-
-
-
-
