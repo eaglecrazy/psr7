@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/psr7",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "anorlov",
+      "email": "eaglecrazy@mail.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.14"
+  }
+}

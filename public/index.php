@@ -1,23 +1,32 @@
 <?php
-//http://courson.xyz?name=anton
+echo __DIR__ . PHP_EOL;
+echo dirname(__DIR__) . PHP_EOL;
+chdir(dirname(__DIR__));
+require 'src/Framework/Http/Request.php';
 
-function getLang($default){
+$request = new Request();
+
+function getLang(array $get, array $cookie, array $session, array $server, $default)
+{
     return
-        !empty($_GET['lang']) ? $_GET['lang'] :
+        !empty($get['lang']) ? $get['lang'] :
             (
-                !empty($_COOKIE['lang']) ? $_COOKIE['lang'] :
+            !empty($cookie['lang']) ? $cookie['lang'] :
+                (
+                !empty($session['lang']) ? $session['lang'] :
                     (
-                        !empty($_SESSION['lang']) ? $_SESSION['lang'] :
-                            (
-                                !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)  :  $default
-                            )
+                    !empty($server['HTTP_ACCEPT_LANGUAGE']) ? substr($server['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $default
                     )
+                )
             );
 }
 
+session_start();
 
-$name = $_GET['name'] ?? 'Guest';
-$lang = getLang('en');
+
+
+
+$name = $request->getQueryParams()['name'] ?? 'Guest';
+$lang = getLang($_GET, $_COOKIE, $_SESSION, $_SERVER, 'en');
 header('X-Developer: Eagle');
-echo $name;
-echo $lang;
+echo $name . ' ' . $lang;
