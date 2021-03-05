@@ -74,8 +74,4 @@ class RouterTest extends TestCase
         self::assertEquals('/blog', $router->generate('blog'));
         self::assertEquals('/blog/5', $router->generate('blog_show', ['id' => 5]));
     }
-
-
-01-13 тест
-1-40
 }

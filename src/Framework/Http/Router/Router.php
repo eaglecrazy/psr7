@@ -69,7 +69,7 @@ class Router
                 if (!array_key_exists($argument, $arguments)) {
                     throw new \InvalidArgumentException('Missing parameter "' . $argument . '"');
                 }
-                return $argument[$argument];
+                return $arguments[$argument];
             }, $route->pattern);
 
             if ($url !== null) {
