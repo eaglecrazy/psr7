@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RequestNotMatchedException extends LogicException
 {
-    private $request;
+    private ServerRequestInterface $request;
 
     public function __construct(ServerRequestInterface $request)
     {
@@ -15,7 +15,8 @@ class RequestNotMatchedException extends LogicException
         $this->request = $request;
     }
 
-    public function getRequest(){
+    public function getRequest()
+    {
         return $this->request;
     }
 }

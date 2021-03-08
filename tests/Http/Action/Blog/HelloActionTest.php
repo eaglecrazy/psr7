@@ -3,8 +3,8 @@
 namespace Tests\Http\Action\Blog;
 
 use App\Http\Action\HelloAction;
-use Framework\Http\Router\RouteCollection;
-use Framework\Http\Router\Router;
+use Aura\Router\RouterContainer;
+use Framework\Http\Router\AuraRouterAdapter;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequest;
 
@@ -12,12 +12,14 @@ class HelloActionTest extends TestCase
 {
     public function testGuest()
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $router = new AuraRouterAdapter($aura);
+        $routes = $aura->getMap();
         $routes->get('home', '/', new HelloAction());
 
         $action   = new HelloAction();
         $request  = new ServerRequest();
-        $response = $action($request, new Router($routes));
+        $response = $action($request, $router);
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('Hello Guest!', $response->getBody()->getContents());
@@ -25,12 +27,14 @@ class HelloActionTest extends TestCase
 
     public function testEagle()
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $router = new AuraRouterAdapter($aura);
+        $routes = $aura->getMap();
         $routes->get('home', '/', new HelloAction());
 
         $action   = new HelloAction();
         $request  = (new ServerRequest())->withQueryParams(['name' => 'Eagle']);
-        $response = $action($request, new Router($routes));
+        $response = $action($request, $router);
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('Hello Eagle!', $response->getBody()->getContents());

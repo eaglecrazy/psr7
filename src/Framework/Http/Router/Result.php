@@ -4,11 +4,11 @@ namespace Framework\Http\Router;
 
 class Result
 {
-    private $name;
+    private string $name;
 
     private $handler;
 
-    private $attributes;
+    private array $attributes;
 
     public function __construct($name, $handler, array $attributes)
     {

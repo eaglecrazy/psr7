@@ -4,11 +4,10 @@ use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\HelloAction;
-
-use Framework\Http\Router\ActionResolver;
+use Aura\Router\RouterContainer;
+use Framework\Http\ActionResolver;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Framework\Http\Router\RouteCollection;
-use Framework\Http\Router\Router;
+use Framework\Http\Router\AuraRouterAdapter;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -17,32 +16,23 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 require 'helpers.php';
 
-class myself
-{
-    public function xxx()
-    {
-        return self::class;
-    }
-}
-
 ### Initialization
 
 session_start();
 $request = ServerRequestFactory::fromGlobals();
 
-$routes = new RouteCollection();
-//$routes->get('home', '/', new HelloAction());
-//$routes->get('about', '/about', new AboutAction());
-//$routes->get('blog', '/blog', new IndexAction());
-//$routes->get('blog_show', '/blog/{id}', new ShowAction());
+### Router
+$aura = new RouterContainer();
+$routes = $aura->getMap();
 
 $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('blog', '/blog', IndexAction::class);
-$routes->get('blog_show', '/blog/{id}', ShowAction::class, ['id' => '\d+']);
+$routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
 
-$router = new Router($routes);
+$router = new AuraRouterAdapter($aura);
 $resolver = new ActionResolver();
+
 ### PreProcessing
 
 //if (preg_match('#json"i', $request->getHeader('Content-Type'))) {
@@ -73,26 +63,3 @@ $response = $response->withHeader('X-Developer', 'eagle');
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);
-
-
-
-
-
-
-
-//$lang = getLang($_GET, $_COOKIE, $_SESSION, $_SERVER, 'en');
-
-//function getLang(array $get, array $cookie, array $session, array $server, $default)
-//{
-//    return
-//        !empty($get['lang']) ? $get['lang'] :
-//            (
-//            !empty($cookie['lang']) ? $cookie['lang'] :
-//                (
-//                !empty($session['lang']) ? $session['lang'] :
-//                    (
-//                    !empty($server['HTTP_ACCEPT_LANGUAGE']) ? substr($server['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $default
-//                    )
-//                )
-//            );
-//}
