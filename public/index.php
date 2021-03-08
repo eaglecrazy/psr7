@@ -5,7 +5,7 @@ use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\HelloAction;
 
-
+use Framework\Http\Router\ActionResolver;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\RouteCollection;
 use Framework\Http\Router\Router;
@@ -17,27 +17,32 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 require 'helpers.php';
 
-
-
-class myself{
-    public function xxx(){
+class myself
+{
+    public function xxx()
+    {
         return self::class;
     }
 }
 
- ### Initialization
+### Initialization
 
 session_start();
 $request = ServerRequestFactory::fromGlobals();
 
 $routes = new RouteCollection();
-$routes->get('home', '/', new HelloAction());
-$routes->get('about', '/about', new AboutAction());
-$routes->get('blog', '/blog', new IndexAction());
-$routes->get('blog_show', '/blog/{id}', new ShowAction());
+//$routes->get('home', '/', new HelloAction());
+//$routes->get('about', '/about', new AboutAction());
+//$routes->get('blog', '/blog', new IndexAction());
+//$routes->get('blog_show', '/blog/{id}', new ShowAction());
+
+$routes->get('home', '/', HelloAction::class);
+$routes->get('about', '/about', AboutAction::class);
+$routes->get('blog', '/blog', IndexAction::class);
+$routes->get('blog_show', '/blog/{id}', ShowAction::class, ['id' => '\d+']);
 
 $router = new Router($routes);
-
+$resolver = new ActionResolver();
 ### PreProcessing
 
 //if (preg_match('#json"i', $request->getHeader('Content-Type'))) {
@@ -46,21 +51,19 @@ $router = new Router($routes);
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-try{
+try {
     $result = $router->match($request);
     //добавляем все атрибуты из роута в реквест
-    foreach ($result->getAttributes() as $attribute => $value){
+    foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
     ### Action
-    $action = $result->getHandler();
+    $handler = $result->getHandler();
+    $action = $resolver->resolve($handler);
     $response = $action($request, $router);
-}catch (RequestNotMatchedException $e){
+} catch (RequestNotMatchedException $e) {
     $response = new JsonResponse(['error' => 'Undefined page'], 404);
 }
-
-
-
 
 ### PostProcessing
 
