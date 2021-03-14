@@ -12,7 +12,7 @@ class PipelineTest extends TestCase
 {
     public function testPipe()
     {
-        $pipeline = new Pipeline();
+        $pipeline = new PipelineTest();
 
         $pipeline->pipe(new Middleware1());
         $pipeline->pipe(new Middleware2());

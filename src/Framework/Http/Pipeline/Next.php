@@ -3,17 +3,20 @@
 namespace Framework\Http\Pipeline;
 
 use phpDocumentor\Reflection\Types\Callable_;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Next
 {
-    private           $default;
-    private \SplQueue $queue;
+    private ResponseInterface $response;
+    private                   $default;
+    private \SplQueue         $queue;
 
-    public function __construct(callable $default, \SplQueue $queue)
+    public function __construct(callable $default, ResponseInterface $response, \SplQueue $queue)
     {
-        $this->default = $default;
-        $this->queue   = $queue;
+        $this->default  = $default;
+        $this->queue    = $queue;
+        $this->response = $response;
     }
 
     public function __invoke(ServerRequestInterface $request)
@@ -24,8 +27,9 @@ class Next
 
         $current = $this->queue->dequeue();
 
-        return $current($request, function (ServerRequestInterface $request) {
-            return $this($request);
-        });
+        return $current($request, $this->response, function (ServerRequestInterface $request)
+    {
+        return $this($request);
+    });
     }
 }
