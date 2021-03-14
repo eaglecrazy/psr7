@@ -9,8 +9,8 @@ use Zend\Diactoros\Response\HtmlResponse;
 
 class AboutAction
 {
-    public function __invoke(ServerRequestInterface $request, Router $router)
+    public function __invoke(ServerRequestInterface $request)
     {
-        return new HtmlResponse((new HomePage($router))->getMenu() . 'PSR-7 Framework');
+        return new HtmlResponse('PSR-7 Framework');
     }
 }

@@ -8,7 +8,7 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class IndexAction
 {
-    public function __invoke(ServerRequestInterface $request, Router $router)
+    public function __invoke(ServerRequestInterface $request)
     {
         return new JsonResponse([
             ['id' => 1, 'title' => 'The First post'],
@@ -16,7 +16,7 @@ class IndexAction
         ]);
     }
 
-    public function blog_show(ServerRequestInterface $request, Router $router)
+    public function blog_show(ServerRequestInterface $request)
     {
         $id = $request->getAttribute('id');
         if ($id > 2) {

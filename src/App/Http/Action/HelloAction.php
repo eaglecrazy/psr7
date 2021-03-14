@@ -9,9 +9,9 @@ use Zend\Diactoros\Response\HtmlResponse;
 
 class HelloAction
 {
-    public function __invoke(ServerRequestInterface $request, Router $router)
+    public function __invoke(ServerRequestInterface $request)
     {
         $name = $request->getQueryParams()['name'] ?? 'Guest';
-        return new HtmlResponse((new HomePage($router))->getMenu() . 'Hello ' . $name . '!');
+        return new HtmlResponse('Hello ' . $name . '!');
     }
 }

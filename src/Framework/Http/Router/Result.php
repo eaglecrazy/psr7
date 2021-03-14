@@ -10,10 +10,10 @@ class Result
 
     private array $attributes;
 
-    public function __construct($name, $handler, array $attributes)
+    public function __construct($name, $handlers, array $attributes)
     {
         $this->name       = $name;
-        $this->handler    = $handler;
+        $this->handler    = $handlers;
         $this->attributes = $attributes;
     }
 
