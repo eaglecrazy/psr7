@@ -12,18 +12,18 @@ use Psr\Http\Server\MiddlewareInterface;
 
 class MiddlewareResolver
 {
-    public function resolve($handler): callable
+    public function resolve($handler, ResponseInterface $responsePrototype): callable
     {
         //если это массив хэндлеров, то создаём пайплайн с ними
         if (is_array($handler)) {
-            return $this->createPipe($handler);
+            return $this->createPipe($handler, $responsePrototype);
         }
 
         //если это строка, то возвращаем анонимку, в которой создаём объект
         if (is_string($handler)) {
             return function (ServerRequestInterface $request, ResponseInterface $response, callable $next)
             use ($handler) {
-                $middleware = $this->resolve(new $handler());
+                $middleware = $this->resolve(new $handler(), $response);
                 return $middleware($request, $response, $next);
             };
         }
@@ -54,8 +54,7 @@ class MiddlewareResolver
         throw new UnknownMiddlewareTypeException($handler);
     }
 
-    private
-    function createPipe(
+    private function createPipe(
         array $handlers
     ): Pipeline {
         $pipeline = new Pipeline();

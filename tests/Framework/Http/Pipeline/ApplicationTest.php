@@ -2,27 +2,32 @@
 
 namespace Tests\Framework\Http\Pipeline;
 
+use Framework\Application;
+use Framework\Http\MiddlewareResolver;
 use Framework\Http\Pipeline\Pipeline;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
 
-class PipelineTest extends TestCase
+ЗАКОНЧИЛ на 3.32
+
+class ApplicationTest extends TestCase
 {
     public function testPipe()
     {
-        $pipeline = new PipelineTest();
-
-        $pipeline->pipe(new Middleware1());
-        $pipeline->pipe(new Middleware2());
-
-        $response = $pipeline(new ServerRequest(), new Last());
-
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(['middleware-1' => 1, 'middleware-2' => 2]),
-            $response->getBody()->getContents()
-        );
+        $app = new Application(new MiddlewareResolver(), new DefaultHandler());
+//        $pipeline = new PipelineTest();
+//
+//        $pipeline->pipe(new Middleware1());
+//        $pipeline->pipe(new Middleware2());
+//
+//        $response = $pipeline(new ServerRequest(), new Last());
+//
+//        $this->assertJsonStringEqualsJsonString(
+//            json_encode(['middleware-1' => 1, 'middleware-2' => 2]),
+//            $response->getBody()->getContents()
+//        );
     }
 
 }
