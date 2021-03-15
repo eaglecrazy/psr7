@@ -11,7 +11,7 @@ use Zend\Stratigility\MiddlewarePipe;
 class Application extends MiddlewarePipe
 {
     private MiddlewareResolver $resolver;
-    private NotFoundHandler $default;
+    private $default;
 
     public function __construct(MiddlewareResolver $resolver, callable $default, ResponseInterface $responsePrototype)
     {
@@ -26,7 +26,7 @@ class Application extends MiddlewarePipe
         if($middleware === null){
             return parent::pipe($this->resolver->resolve($path, $this->responsePrototype));
         }
-        return parent::pipe($this->resolver->resolve($middleware, $this->responsePrototype));
+        return parent::pipe($path, $this->resolver->resolve($middleware, $this->responsePrototype));
     }
 
     public function run(ServerRequestInterface $request, ResponseInterface $response)

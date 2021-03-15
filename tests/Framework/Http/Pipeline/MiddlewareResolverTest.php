@@ -24,7 +24,7 @@ class MiddlewareResolverTest extends TestCase
     public function testDirect($handler)
     {
         $resolver   = new MiddlewareResolver();
-        $middleware = $resolver->resolve($handler);
+        $middleware = $resolver->resolve($handler, new Response());
 
         /** @var ResponseInterface $response */
         $response = $middleware(
@@ -67,7 +67,7 @@ class MiddlewareResolverTest extends TestCase
     }
 }
 
-class callableMiddleware
+class CallableMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next)
     {
@@ -89,7 +89,7 @@ class DoublePassMiddleware
     }
 }
 
-class interopMiddleware implements MiddlewareInterface
+class InteropMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -100,7 +100,7 @@ class interopMiddleware implements MiddlewareInterface
     }
 }
 
-class notFoundMiddleware
+class NotFoundMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next)
     {
@@ -108,7 +108,7 @@ class notFoundMiddleware
     }
 }
 
-class dummyMiddleware
+class DummyMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next): ResponseInterface
     {

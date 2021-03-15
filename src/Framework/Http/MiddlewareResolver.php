@@ -9,6 +9,7 @@ use PHPUnit\Framework\MockObject\UnknownClassException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Zend\Stratigility\MiddlewarePipe;
 
 class MiddlewareResolver
 {
@@ -55,11 +56,13 @@ class MiddlewareResolver
     }
 
     private function createPipe(
-        array $handlers
-    ): Pipeline {
-        $pipeline = new Pipeline();
+        array $handlers,
+        $responsePrototype
+    ): MiddlewarePipe {
+        $pipeline = new MiddlewarePipe();
+        $pipeline->setResponsePrototype($responsePrototype);
         foreach ($handlers as $handler) {
-            $pipeline->pipe($this->resolve($handler));
+            $pipeline->pipe($this->resolve($handler, $responsePrototype));
         }
         return $pipeline;
     }

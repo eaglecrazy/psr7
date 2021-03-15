@@ -19,6 +19,9 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
+
+ЗАКОНЧИЛ 3-46
+
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 require 'helpers.php';
@@ -42,14 +45,7 @@ $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('blog', '/blog', IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
-$routes->get(
-    'cabinet',
-    '/cabinet',
-    [
-        new BasicAuthMiddleware($params['users'], new Response()),
-//        new \App\Http\Middleware\BasicAuthMiddlewareOld($params['users'], new Response()),
-        CabinetAction::class,
-    ]);
+$routes->get('cabinet', '/cabinet', CabinetAction::class);
 
 ### App
 $resolver = new MiddlewareResolver();
@@ -59,6 +55,7 @@ $app      = new Application($resolver, new NotFoundHandler(), new Response());
 //$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfileMiddleware::class);
+$app->pipe('/cabinet', new BasicAuthMiddleware($params['users'], new Response()));
 $app->pipe(new RouteMiddleware($router));
 $app->pipe(new DispatchMiddleware($resolver));
 
