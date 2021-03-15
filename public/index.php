@@ -25,7 +25,7 @@ require 'helpers.php';
 
 $params = [
     'debug' => true,
-    'users' => ['admin' => 'pa1ss1word'],
+    'users' => ['admin' => 'password'],
 ];
 
 ### Initialization
@@ -47,6 +47,7 @@ $routes->get(
     '/cabinet',
     [
         new BasicAuthMiddleware($params['users'], new Response()),
+//        new \App\Http\Middleware\BasicAuthMiddlewareOld($params['users'], new Response()),
         CabinetAction::class,
     ]);
 
