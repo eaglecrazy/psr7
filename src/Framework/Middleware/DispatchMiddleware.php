@@ -21,9 +21,12 @@ class DispatchMiddleware
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
+        //getAttribute(Result::class) - получает результат работы маршрутизатора
         if(!$result = $request->getAttribute(Result::class)){
+            //если его нет, то стандартный ответ - 404
             return $next($request);
         }
+        //роут найден, нормальная работа
         $middleware = $this->resolver->resolve($result->getHandler(), $response);
         return $middleware($request, $response, $next);
     }

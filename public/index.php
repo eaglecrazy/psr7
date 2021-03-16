@@ -19,9 +19,6 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-
-ЗАКОНЧИЛ 3-46
-
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 require 'helpers.php';
