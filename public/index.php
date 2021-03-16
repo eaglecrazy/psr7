@@ -1,5 +1,5 @@
 <?php
-21 минута
+50 минут
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
@@ -11,6 +11,7 @@ use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfileMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Application;
+use Framework\Container\Container;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Middleware\DispatchMiddleware;
@@ -21,12 +22,11 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
-require 'helpers.php';
 
-$params = [
-    'debug' => true,
-    'users' => ['admin' => 'password'],
-];
+### Configuration
+$container = new Container();
+$container->set('debug', true);
+$container->set('users', ['admin' => 'password'],);
 
 ### Initialization
 
@@ -52,7 +52,7 @@ $app      = new Application($resolver, new NotFoundHandler(), new Response());
 //$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfileMiddleware::class);
-$app->pipe('/cabinet', new BasicAuthMiddleware($params['users'], new Response()));
+$app->pipe('/cabinet', new BasicAuthMiddleware($container->get('users'), new Response()));
 $app->pipe(new RouteMiddleware($router));
 $app->pipe(new DispatchMiddleware($resolver));
 
