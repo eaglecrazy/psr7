@@ -1,5 +1,5 @@
 <?php
-50 минут
+закончил 1-18
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
