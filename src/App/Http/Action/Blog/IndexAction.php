@@ -3,11 +3,17 @@
 namespace App\Http\Action\Blog;
 
 use Framework\Http\Router\Router;
+use PDO;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
 class IndexAction
 {
+    public function __construct(PDO $db, int $perPage)
+    {
+
+    }
+
     public function __invoke(ServerRequestInterface $request)
     {
         return new JsonResponse([
