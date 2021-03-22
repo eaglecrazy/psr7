@@ -6,9 +6,11 @@ class Mailer
     /**
      * Mailer constructor.
      *
-     * @param string $adress
+     * @param string $user
+     * @param string $password
      */
-    public function __construct(string $adress)
+    public function __construct(string $user, string $password)
     {
+
     }
 }

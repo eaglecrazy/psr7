@@ -9,17 +9,25 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class IndexAction
 {
+    private $db;
+    private $perPage;
+
     public function __construct(PDO $db, int $perPage)
     {
-
+        $this->db = $db;
+        $this->perPage = $perPage;
     }
 
     public function __invoke(ServerRequestInterface $request)
     {
-        return new JsonResponse([
-            ['id' => 1, 'title' => 'The First post'],
-            ['id' => 2, 'title' => 'The Second post'],
-        ]);
+        $page = $request->getQueryParams()['page'] ?? 1;
+
+        $limit = $this->perPage;
+        $offset = ($page - 1) * $this->perPage;
+
+        $stmt = $this->db->query("SELECT * FROM users ORDER BY id DESC LIMIT $limit OFFSET $offset");
+
+        return new JsonResponse($stmt->fetchAll());
     }
 
     public function blog_show(ServerRequestInterface $request)

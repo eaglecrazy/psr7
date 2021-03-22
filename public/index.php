@@ -28,6 +28,7 @@ $container = new Container();
 $container->set('debug', true);
 $container->set('users', ['admin' => 'password'],);
 
+
 ### Initialization
 
 session_start();

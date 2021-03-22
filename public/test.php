@@ -1,22 +1,15 @@
 <?php
 
+
+1-26
+
 use App\Http\Action\Blog\IndexAction;
 use Framework\Container\Container;
 
 $container = new Container();
 
 ### Parameters
-
-$container->set('debug', true);
-$container->set('users', ['admin' => 'password']);
-$container->set('dsn', 'mysql:localhost;dbname=courson');
-$container->set('username', 'homestead');
-$container->set('password', 'secret');
-
-$container->set('config', require ('../config/params.php'));
-
-$container->set('address', 'ya@mail.ru');
-$container->set('per_page', 10);
+$container->set('config', require('../config/params.php'));
 
 ### Services
 
@@ -29,9 +22,13 @@ $container->set('db', function (Container $container) {
 });
 
 $container->set('mailer', function (Container $container) {
-    return new Mailer($container->get('adress'));
+    return new Mailer(
+        $container->get('config')['mailer']['username'],
+        $container->get('config')['mailer']['password']
 });
 
-$container->set('action . blog_index', function (Container $container) {
+$container->set(IndexAction::class, function (Container $container) {
     return new IndexAction($container->get('db'), $container->get('per_page'));
 });
+
+$action = $container->get(IndexAction::class);
