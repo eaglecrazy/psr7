@@ -7,7 +7,7 @@ use Closure;
 class Container implements \ArrayAccess
 {
     private array $definitions = [];
-    private       $results     = [];
+    private array $results     = [];
 
     public function __construct()
     {

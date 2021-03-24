@@ -12,7 +12,7 @@ class BasicAuthMiddleware implements MiddlewareInterface
     public const ATTRIBUTE = '_user';
 
     private array $users;
-    private $responsePrototype;
+    private ResponseInterface $responsePrototype;
 
     public function __construct(array $users, ResponseInterface $responsePrototype)
     {

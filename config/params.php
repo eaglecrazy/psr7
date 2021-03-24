@@ -1,6 +1,6 @@
 <?php
 [
-    'config' => [
+//    'config' => [
         'debug'    => true,
         'users'    => ['admin' => 'password'],
         'per_page' => 10,
@@ -14,5 +14,5 @@
             'username' => 'root',
             'password' => 'secret',
         ],
-    ],
+//    ],
 ];

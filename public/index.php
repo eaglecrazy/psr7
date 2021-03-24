@@ -1,5 +1,5 @@
 <?php
-
+1-28
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
@@ -25,9 +25,22 @@ require 'vendor/autoload.php';
 
 ### Configuration
 $container = new Container();
-$container->set('debug', true);
-$container->set('users', ['admin' => 'password'],);
-
+//$container->set('config', require('config/params.php'));
+$container->set('config', [
+    'debug'    => true,
+    'users'    => ['admin' => 'password'],
+    'per_page' => 10,
+    'address'  => 'ya@mail.ru',
+    'db'       => [
+        'dsn'      => 'mysql:localhost;dbname=courson',
+        'username' => 'homestead',
+        'password' => 'secret',
+    ],
+    'mailer'   => [
+        'username' => 'root',
+        'password' => 'secret',
+    ],
+]);
 
 ### Initialization
 
@@ -36,7 +49,7 @@ $request = ServerRequestFactory::fromGlobals();
 
 ### Router
 $aura   = new RouterContainer();
-$router   = new AuraRouterAdapter($aura);
+$router = new AuraRouterAdapter($aura);
 $routes = $aura->getMap();
 ### Routes
 $routes->get('home', '/', HelloAction::class);
@@ -49,11 +62,10 @@ $routes->get('cabinet', '/cabinet', CabinetAction::class);
 $resolver = new MiddlewareResolver();
 $app      = new Application($resolver, new NotFoundHandler(), new Response());
 
-
 //$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfileMiddleware::class);
-$app->pipe('/cabinet', new BasicAuthMiddleware($container->get('users'), new Response()));
+$app->pipe('cabinet', new BasicAuthMiddleware($container->get('config')['users'], new Response()));
 $app->pipe(new RouteMiddleware($router));
 $app->pipe(new DispatchMiddleware($resolver));
 
