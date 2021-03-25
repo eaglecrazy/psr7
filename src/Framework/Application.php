@@ -31,6 +31,7 @@ class Application extends MiddlewarePipe
 
     public function run(ServerRequestInterface $request, ResponseInterface $response)
     {
+        //вызывается __invoke родительского класса
         return $this($request, $response, $this->default);
     }
 }

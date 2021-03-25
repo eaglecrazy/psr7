@@ -12,9 +12,8 @@ class RouteMiddleware
 {
     private AuraRouterAdapter  $router;
 
-    public function __construct(
-        AuraRouterAdapter $router
-    ) {
+    public function __construct(AuraRouterAdapter $router)
+    {
         $this->router = $router;
     }
 

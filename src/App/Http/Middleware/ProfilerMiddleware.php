@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ProfileMiddleware
+class ProfilerMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next)
     {

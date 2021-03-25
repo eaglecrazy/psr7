@@ -1,5 +1,5 @@
 <?php
-1-28
+
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
@@ -8,7 +8,7 @@ use App\Http\Action\HelloAction;
 use App\Http\Middleware\BasicAuthMiddleware;
 use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\NotFoundHandler;
-use App\Http\Middleware\ProfileMiddleware;
+use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Application;
 use Framework\Container\Container;
@@ -42,6 +42,11 @@ $container->set('config', [
     ],
 ]);
 
+
+$container->set('middleware.basic_auth', function (Container $container) {
+    return new BasicAuthMiddleware($container->get('config')['users'], new Response());
+});
+
 ### Initialization
 
 session_start();
@@ -64,9 +69,9 @@ $app      = new Application($resolver, new NotFoundHandler(), new Response());
 
 //$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
-$app->pipe(ProfileMiddleware::class);
-$app->pipe('cabinet', new BasicAuthMiddleware($container->get('config')['users'], new Response()));
+$app->pipe(ProfilerMiddleware::class);
 $app->pipe(new RouteMiddleware($router));
+$app->pipe('cabinet', $container->get('middleware.basic_auth'));
 $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
