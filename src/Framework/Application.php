@@ -24,9 +24,9 @@ class Application extends MiddlewarePipe
     {
         parent::__construct();
         $this->resolver = $resolver;
+        $this->router = $router;
         $this->setResponsePrototype($responsePrototype);
         $this->default = $default;
-        $this->router = $router;
     }
 
     public function pipe($path, $middleware = null): MiddlewarePipe

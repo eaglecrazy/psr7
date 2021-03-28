@@ -2,19 +2,9 @@
 
 namespace Framework\Container;
 
-use Throwable;
+use InvalidArgumentException;
+use Psr\Container\NotFoundExceptionInterface;
 
-class ServiceNotFoundException extends \InvalidArgumentException
+class ServiceNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface
 {
-    private $type;
-
-    public function __construct($type)
-    {
-        parent::__construct('Unknown middleware type.');
-        $this->type = $type;
-    }
-
-    public function getType(){
-        return $this->type;
-    }
 }

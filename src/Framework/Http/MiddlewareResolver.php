@@ -3,9 +3,8 @@
 namespace Framework\Http;
 
 use Framework\Http\Pipeline\HandlerWrapper;
-use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Pipeline\UnknownMiddlewareTypeException;
-use PHPUnit\Framework\MockObject\UnknownClassException;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -13,6 +12,13 @@ use Zend\Stratigility\MiddlewarePipe;
 
 class MiddlewareResolver
 {
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     public function resolve($handler, ResponseInterface $responsePrototype): callable
     {
         //если это массив хэндлеров, то создаём пайплайн с ними
@@ -21,10 +27,10 @@ class MiddlewareResolver
         }
 
         //если это строка, то возвращаем анонимку, в которой создаём объект
-        if (is_string($handler)) {
+        if (is_string($handler) && $this->container->has($handler)) {
             return function (ServerRequestInterface $request, ResponseInterface $response, callable $next)
             use ($handler) {
-                $middleware = $this->resolve(new $handler(), $response);
+                $middleware = $this->resolve($this->container->get($handler), $response);
                 return $middleware($request, $response, $next);
             };
         }

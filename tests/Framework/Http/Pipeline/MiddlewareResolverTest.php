@@ -2,17 +2,17 @@
 
 namespace Tests\Framework\Http\Pipeline;
 
+
 use Framework\Http\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tests\Framework\Http\DummyContainer;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\EmptyResponse;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
 
 class MiddlewareResolverTest extends TestCase
@@ -23,7 +23,7 @@ class MiddlewareResolverTest extends TestCase
      */
     public function testDirect($handler)
     {
-        $resolver   = new MiddlewareResolver();
+        $resolver   = new MiddlewareResolver(new DummyContainer());
         $middleware = $resolver->resolve($handler, new Response());
 
         /** @var ResponseInterface $response */

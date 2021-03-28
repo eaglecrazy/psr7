@@ -2,9 +2,10 @@
 
 namespace Tests\Framework\Http;
 
+
 use Framework\Application;
 use Framework\Http\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
+use Framework\Http\Router\Router;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,9 +15,20 @@ use Zend\Diactoros\ServerRequest;
 
 class ApplicationTest extends TestCase
 {
+
+    private MiddlewareResolver $resolver;
+    private $router;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->resolver = new MiddlewareResolver(new DummyContainer());
+        $this->router = $this->createMock(Router::class);
+    }
+
     public function testPipe()
     {
-        $app = new Application(new MiddlewareResolver(), new DefaultHandler(), new Response());
+        $app = new Application($this->resolver, $this->router, new DefaultHandler(), new Response());
 
         $app->pipe(new Middleware1());
         $app->pipe(new Middleware2());
