@@ -2,17 +2,16 @@
 
 namespace Framework\Middleware;
 
-use Framework\Http\MiddlewareResolver;
-use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\Result;
+use Framework\Http\Router\Router;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RouteMiddleware
 {
-    private AuraRouterAdapter  $router;
+    private Router $router;
 
-    public function __construct(AuraRouterAdapter $router)
+    public function __construct(Router $router)
     {
         $this->router = $router;
     }

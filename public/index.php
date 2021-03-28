@@ -14,6 +14,7 @@ use Framework\Application;
 use Framework\Container\Container;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
+use Framework\Http\Router\Router;
 use Framework\Middleware\DispatchMiddleware;
 use Framework\Middleware\RouteMiddleware;
 use Zend\Diactoros\Response;
@@ -42,9 +43,33 @@ $container->set('config', [
     ],
 ]);
 
+$container->set(Application::class, function (Container $container) {
+    return new Application(
+        $container->get(MiddlewareResolver::class),
+        $container->get(Router::class),
+        new NotFoundHandler(),
+        new Response());
+});
 
-$container->set('middleware.basic_auth', function (Container $container) {
+$container->set(BasicAuthMiddleware::class, function (Container $container) {
     return new BasicAuthMiddleware($container->get('config')['users'], new Response());
+});
+
+$container->set(MiddlewareResolver::class, function (){
+    return new MiddlewareResolver();
+});
+
+$container->set(RouteMiddleware::class, function (Container $container){
+    return new RouteMiddleware($container->get(Router::class));
+});
+
+$container->set(DispatchMiddleware::class, function (Container $container){
+    return new DispatchMiddleware($container->get(MiddlewareResolver::class));
+});
+
+$container->set(Router::class, function (){
+    $aura = new RouterContainer();
+    return new AuraRouterAdapter($aura);
 });
 
 ### Initialization
@@ -52,27 +77,26 @@ $container->set('middleware.basic_auth', function (Container $container) {
 session_start();
 $request = ServerRequestFactory::fromGlobals();
 
-### Router
-$aura   = new RouterContainer();
-$router = new AuraRouterAdapter($aura);
-$routes = $aura->getMap();
-### Routes
-$routes->get('home', '/', HelloAction::class);
-$routes->get('about', '/about', AboutAction::class);
-$routes->get('blog', '/blog', IndexAction::class);
-$routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
-$routes->get('cabinet', '/cabinet', CabinetAction::class);
 
 ### App
-$resolver = new MiddlewareResolver();
-$app      = new Application($resolver, new NotFoundHandler(), new Response());
+
+/** @var Application $app */
+$app = $container->get(Application::class);
 
 //$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
-$app->pipe(new RouteMiddleware($router));
-$app->pipe('cabinet', $container->get('middleware.basic_auth'));
-$app->pipe(new DispatchMiddleware($resolver));
+$app->pipe($container->get(RouteMiddleware::class));
+$app->pipe('cabinet', $container->get(BasicAuthMiddleware::class));
+$app->pipe($container->get(DispatchMiddleware::class));
+
+
+### Routes
+$app->get('home', '/', HelloAction::class);
+$app->get('about', '/about', AboutAction::class);
+$app->get('blog', '/blog', IndexAction::class);
+$app->get('blog_show', '/blog/{id}', ShowAction::class, ['tokens' => ['id' => '\d+']]);
+$app->get('cabinet', '/cabinet', CabinetAction::class);
 
 ### Running
 $response = $app->run($request, new Response());

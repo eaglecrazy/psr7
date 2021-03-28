@@ -28,4 +28,10 @@ interface Router
      * @return mixed
      */
     public function hasRoute(string $name);
+
+    /**
+     * @param RouteData $data
+     * @return mixed
+     */
+    public function addRoute(RouteData $data): void;
 }
