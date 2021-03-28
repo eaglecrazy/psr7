@@ -1,6 +1,6 @@
 <?php
 
-use Framework\Application;
+use Framework\Http\Application;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Middleware;
+namespace Framework\Http\Middleware;
 
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;

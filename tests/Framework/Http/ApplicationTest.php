@@ -3,7 +3,7 @@
 namespace Tests\Framework\Http;
 
 
-use Framework\Application;
+use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\Router;
 use PHPUnit\Framework\TestCase;

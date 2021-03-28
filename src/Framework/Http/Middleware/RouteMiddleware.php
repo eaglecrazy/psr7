@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Middleware;
+namespace Framework\Http\Middleware;
 
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\Result;

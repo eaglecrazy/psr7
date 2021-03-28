@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework;
+namespace Framework\Http;
 
 use App\Http\Middleware\NotFoundHandler;
 use Framework\Http\MiddlewareResolver;
