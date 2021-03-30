@@ -20,7 +20,7 @@ class CabinetAction
     {
         $name = $request->getAttribute(BasicAuthMiddleware::ATTRIBUTE);
         return new HtmlResponse($this->renderer->render(
-            'cabinet',
+            'app/cabinet',
             [
                 'name' => $name,
             ])

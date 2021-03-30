@@ -19,6 +19,6 @@ class AboutAction
 
     public function __invoke(ServerRequestInterface $request)
     {
-        return new HtmlResponse($this->renderer->render('about'));
+        return new HtmlResponse($this->renderer->render('app/about'));
     }
 }

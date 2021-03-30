@@ -1,9 +1,11 @@
+<?php /** @var array $params */ ?>
+<?php /** @var string $content */ ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Hello - App</title>
+    <title> <?= $params['title'] ?> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <style>
@@ -40,12 +42,7 @@
 <div class="app-content">
     <main class="container">
 
-        <div class="jumbotron">
-            <h1>Hello!</h1>
-            <p>
-                Congratulations! You have successfully created your application.
-            </p>
-        </div>
+        <?= $content ?>
 
     </main>
 </div>

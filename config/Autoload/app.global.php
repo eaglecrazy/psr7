@@ -8,6 +8,7 @@ use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
+use Framework\Http\Template\PhpRenderer;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Container\ContainerInterface;
 use Zend\Diactoros\Response;
@@ -43,7 +44,7 @@ return [
                 function (ContainerInterface $container) {
                     return new ErrorHandlerMiddleware($container->get('config')['debug']);
                 },
-            TemplateRenderer::class => fn() => new TemplateRenderer('templates'),
+            TemplateRenderer::class => fn() => new PhpRenderer('templates'),
         ],
     ],
 ];
