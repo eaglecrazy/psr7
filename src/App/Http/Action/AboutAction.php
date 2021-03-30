@@ -10,6 +10,8 @@ use Zend\Diactoros\Response\HtmlResponse;
 
 class AboutAction
 {
+    private TemplateRenderer $renderer;
+
     public function __construct(TemplateRenderer $renderer)
     {
         $this->renderer = $renderer;
@@ -17,6 +19,6 @@ class AboutAction
 
     public function __invoke(ServerRequestInterface $request)
     {
-        return new HtmlResponse('PSR-7 Framework');
+        return new HtmlResponse($this->renderer->render('about'));
     }
 }

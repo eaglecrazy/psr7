@@ -9,6 +9,8 @@ use Zend\Diactoros\Response\HtmlResponse;
 
 class CabinetAction
 {
+    private TemplateRenderer $renderer;
+
     public function __construct(TemplateRenderer $renderer)
     {
         $this->renderer = $renderer;
@@ -16,6 +18,12 @@ class CabinetAction
 
     public function __invoke(ServerRequestInterface $request)
     {
-        return new HtmlResponse('I am logged in as ' . $request->getAttribute(BasicAuthMiddleware::ATTRIBUTE));
+        $name = $request->getAttribute(BasicAuthMiddleware::ATTRIBUTE);
+        return new HtmlResponse($this->renderer->render(
+            'cabinet',
+            [
+                'name' => $name,
+            ])
+        );
     }
 }
