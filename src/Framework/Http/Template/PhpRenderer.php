@@ -5,8 +5,9 @@ namespace Framework\Http\Template;
 class PhpRenderer implements TemplateRenderer
 {
     private string $path;
-    private ?string $extends;
-    private array $params = [];
+    private ?string $extend;
+    public array $params = [];
+    public array $blocks = [];
 
     public function __construct(string $path)
     {
@@ -20,17 +21,32 @@ class PhpRenderer implements TemplateRenderer
         ob_start();
         extract($params, EXTR_OVERWRITE);
 
-        $this->extends = null;
+        $this->extend = null;
 
         require $templateFile;
         $content = ob_get_clean();
-        if($this->extends === null){
+        if(!$this->extend){
 
             return $content;
         }
 
-        return $this->render($this->extends, [
+        return $this->render($this->extend, [
             'content' => $content
         ]);
+    }
+
+    public function extend($view):void
+    {
+        $this->extend = $view;
+    }
+
+    public function beginBlock()
+    {
+        ob_start();
+    }
+
+    public function endBlock(string $block)
+    {
+        $this->blocks[$block] = ob_get_clean();
     }
 }

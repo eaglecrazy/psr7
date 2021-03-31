@@ -1,7 +1,20 @@
 <?php
-$this->extends = 'layout/default';
-$this->params['title'] = 'about';
+    /** @var \Framework\Http\Template\PhpRenderer $this */
+    $this->extend('layout/columns');
 ?>
+
+<?php
+    $this->params['title'] = 'About';
+?>
+
+<?php $this->beginBlock() ?>
+<div class="panel panel-default">
+    <div class="panel-heading">Cabinet</div>
+    <div class="panel-body">
+        About navigation
+    </div>
+</div>
+<?php $this->endBlock('sidebar'); ?>
 
 <ul class="breadcrumb">
     <li><a href="/">Home</a></li>
