@@ -1,7 +1,5 @@
-<?php
-$extends = 'layout/default';
-$params['title'] = 'Hello';
-?>
+<?php $this->extends = 'layout/default'; ?>
+<?php $this->params['title'] = 'Hello'; ?>
 <div class="jumbotron">
     <h1>Hello!</h1>
     <p>

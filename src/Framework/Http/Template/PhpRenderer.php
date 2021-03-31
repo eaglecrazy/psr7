@@ -5,29 +5,32 @@ namespace Framework\Http\Template;
 class PhpRenderer implements TemplateRenderer
 {
     private string $path;
+    private ?string $extends;
+    private array $params = [];
 
     public function __construct(string $path)
     {
         $this->path = $path;
     }
 
-    public function render(string $view, array $params = [])
+    public function render(string $name, array $params = []): string
     {
-        $templateFile = $this->path . '/' . $view . '.php';
+        $templateFile = $this->path . '/' . $name . '.php';
 
         ob_start();
         extract($params, EXTR_OVERWRITE);
 
-        $params = [];
-        $extends = null;
+        $this->extends = null;
 
         require $templateFile;
         $content = ob_get_clean();
+        if($this->extends === null){
 
-        if($extends === null){
             return $content;
         }
 
-        return $this->render($extends, ['content' => $content]);
+        return $this->render($this->extends, [
+            'content' => $content
+        ]);
     }
 }
