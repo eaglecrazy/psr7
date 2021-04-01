@@ -3,27 +3,17 @@
     $this->extend('layout/columns');
 ?>
 
-<?php
-    $this->params['title'] = 'About';
-?>
+<?php $this->beginBlock('title') ?>
+    About
+<?php $this->endBlock(); ?>
 
-<?php $this->beginBlock() ?>
-<div class="panel panel-default">
-    <div class="panel-heading">Cabinet</div>
-    <div class="panel-body">
-        About navigation
-    </div>
-</div>
-<?php $this->endBlock('sidebar'); ?>
+<?php $this->beginBlock('breadcrumbs') ?>
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">About</li>
+    </ul>
+<?php $this->endBlock(); ?>
 
-<ul class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li class="active">Cabinet</li>
-</ul>
-
-<ul class="nav navbar-nav navbar-right">
-    <li><a href="/about"><i class="glyphicon glyphicon-book"></i> About</a></li>
-    <li><a href="/cabinet"><i class="glyphicon glyphicon-user"></i> Cabinet</a></li>
-</ul>
-
-<h1>About the site</h1>
+<?php $this->beginBlock('content') ?>
+    <h1>About the site</h1>
+<?php $this->endBlock(); ?>

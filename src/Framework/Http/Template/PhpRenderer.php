@@ -2,16 +2,22 @@
 
 namespace Framework\Http\Template;
 
+use SplStack;
+
+
+Закончил 1-58
+
 class PhpRenderer implements TemplateRenderer
 {
     private string $path;
     private ?string $extend;
-    public array $params = [];
     public array $blocks = [];
+    private SplStack $blockNames;
 
     public function __construct(string $path)
     {
         $this->path = $path;
+        $this->blockNames = new SplStack();
     }
 
     public function render(string $name, array $params = []): string
@@ -19,7 +25,7 @@ class PhpRenderer implements TemplateRenderer
         $templateFile = $this->path . '/' . $name . '.php';
 
         ob_start();
-        extract($params, EXTR_OVERWRITE);
+//        extract($params, EXTR_OVERWRITE);
 
         $this->extend = null;
 
@@ -40,13 +46,20 @@ class PhpRenderer implements TemplateRenderer
         $this->extend = $view;
     }
 
-    public function beginBlock()
+    public function beginBlock(string $name): void
     {
+        $this->blockNames->push($name);
         ob_start();
     }
 
-    public function endBlock(string $block)
+    public function endBlock(): void
     {
-        $this->blocks[$block] = ob_get_clean();
+        $name = $this->blockNames->pop();
+        $this->blocks[$name] = ob_get_clean();
+    }
+
+    public function renderBlock(string $name): string
+    {
+        return $this->blocks[$name] ?? '';
     }
 }

@@ -1,11 +1,21 @@
+<?php
+    /** @var \Framework\Http\Template\PhpRenderer $this */
+?>
 <?php /** @var string $content */ ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title> <?= $this->params['title'] ?> </title>
+    <title>
+    <?=
+        $this->renderBlock('title')
+    ?>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <?=
+        $this->renderBlock('meta')
+    ?>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <style>
         body { padding-top: 70px; }
@@ -40,9 +50,8 @@
 
 <div class="app-content">
     <main class="container">
-
-        <?= $content ?>
-
+        <?= $this->renderBlock('breadcrumbs') ?>
+        <?= $this->renderBlock('content') ?>
     </main>
 </div>
 
