@@ -1,7 +1,7 @@
 <?php
     /** @var \Framework\Http\Template\PhpRenderer $this */
 ?>
-<?php /** @var string $content */ ?>
+
 <!DOCTYPE html>
 <html>
 <head>

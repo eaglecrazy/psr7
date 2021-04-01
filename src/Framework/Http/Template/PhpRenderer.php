@@ -5,7 +5,7 @@ namespace Framework\Http\Template;
 use SplStack;
 
 
-Закончил 1-58
+//Закончил 2-15
 
 class PhpRenderer implements TemplateRenderer
 {
@@ -20,25 +20,21 @@ class PhpRenderer implements TemplateRenderer
         $this->blockNames = new SplStack();
     }
 
-    public function render(string $name, array $params = []): string
+    public function render(string $name): string
     {
         $templateFile = $this->path . '/' . $name . '.php';
 
         ob_start();
-//        extract($params, EXTR_OVERWRITE);
 
         $this->extend = null;
 
         require $templateFile;
         $content = ob_get_clean();
         if(!$this->extend){
-
             return $content;
         }
 
-        return $this->render($this->extend, [
-            'content' => $content
-        ]);
+        return $this->render($this->extend);
     }
 
     public function extend($view):void
@@ -54,12 +50,33 @@ class PhpRenderer implements TemplateRenderer
 
     public function endBlock(): void
     {
+        $content = ob_get_clean();
         $name = $this->blockNames->pop();
-        $this->blocks[$name] = ob_get_clean();
+        if($this->hasBlock($name)){
+            return;
+        }
+        $this->blocks[$name] = $content;
     }
 
     public function renderBlock(string $name): string
     {
         return $this->blocks[$name] ?? '';
+    }
+
+
+    public function hasBlock($name): bool
+    {
+        return array_key_exists($name, $this->blocks);
+    }
+
+    public function ensureBlock(string $name)
+    {
+       if(!$this->hasBlock($name)){
+           return false;
+       }
+
+       $this->beginBlock($name);
+       return true;
+
     }
 }
