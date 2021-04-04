@@ -18,14 +18,14 @@
             <?= $this->renderBlock('main') ?>
         </div>
 
-        <?php if($this->ensureBlock('sidebar')) : ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">Site</div>
-            <div class="panel-body">
-                Site navigation
+        <?php $this->block('sidebar', function() { ob_start(); ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">Site</div>
+                <div class="panel-body">
+                    Site navigation
+                </div>
             </div>
-        </div>
-        <?php $this->endBlock(); endif; ?>
+        <?php return ob_get_clean(); }); ?>
 
         <div class="col-md-3">
             <?= $this->renderBlock('sidebar') ?>

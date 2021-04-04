@@ -44,7 +44,9 @@ return [
                 function (ContainerInterface $container) {
                     return new ErrorHandlerMiddleware($container->get('config')['debug']);
                 },
-            TemplateRenderer::class => fn() => new PhpRenderer('templates'),
+            TemplateRenderer::class       => function (ContainerInterface $container) {
+                return new PhpRenderer('templates', $container->get(Router::class));
+            },
         ],
     ],
 ];

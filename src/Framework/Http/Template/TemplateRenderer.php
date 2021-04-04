@@ -4,5 +4,5 @@ namespace Framework\Http\Template;
 
 interface TemplateRenderer
 {
-    public function render(string $name);
+    public function render(string $name, $params = []): string;
 }

@@ -9,7 +9,7 @@
 
 <?php $this->beginBlock('breadcrumbs') ?>
     <ul class="breadcrumb">
-        <li><a href="/">Home</a></li>
+        <li><a href="<?= $this->encode($this->path('about')) ?>">Home</a></li>
         <li class="active">About</li>
     </ul>
 <?php $this->endBlock(); ?>

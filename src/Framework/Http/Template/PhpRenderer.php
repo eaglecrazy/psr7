@@ -2,10 +2,12 @@
 
 namespace Framework\Http\Template;
 
+use Closure;
+use Framework\Http\Router\Router;
 use SplStack;
 
 
-//Закончил 2-15
+//Закончил 2-40
 
 class PhpRenderer implements TemplateRenderer
 {
@@ -14,17 +16,25 @@ class PhpRenderer implements TemplateRenderer
     public array $blocks = [];
     private SplStack $blockNames;
 
-    public function __construct(string $path)
+    /**
+     * @var Router
+     */
+    private Router $router;
+
+    public function __construct(string $path, Router $router)
     {
         $this->path = $path;
         $this->blockNames = new SplStack();
+        $this->router = $router;
     }
 
-    public function render(string $name): string
+    public function render(string $name, $params = []): string
     {
         $templateFile = $this->path . '/' . $name . '.php';
 
         ob_start();
+
+        extract($params, EXTR_OVERWRITE);
 
         $this->extend = null;
 
@@ -60,9 +70,14 @@ class PhpRenderer implements TemplateRenderer
 
     public function renderBlock(string $name): string
     {
-        return $this->blocks[$name] ?? '';
-    }
+        $block = $this->blocks[$name] ?? null;
 
+        if($block instanceof Closure){
+            return $block();
+        }
+
+        return $block ?? '';
+    }
 
     public function hasBlock($name): bool
     {
@@ -78,5 +93,23 @@ class PhpRenderer implements TemplateRenderer
        $this->beginBlock($name);
        return true;
 
+    }
+
+    public function block($name, $content){
+
+        if($this->hasBlock($name)){
+            return;
+        }
+        $this->blocks[$name] = $content;
+    }
+
+    public function encode(string $string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
+    }
+
+    public function path(string $name, $params = []):string
+    {
+         return $this->router->generate($name, $params);
     }
 }
