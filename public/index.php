@@ -7,6 +7,8 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 //закончил
 
+lightshot
+
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
