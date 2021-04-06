@@ -32,6 +32,8 @@ class IndexAction
     {
         $posts = $this->posts->getAll();
 
-        return new HtmlResponse($this->template->render('app/blog/index', ['posts' => $posts]));
+        return new HtmlResponse($this->template->render('app/blog/index', [
+            'posts' => $posts
+        ]));
     }
 }

@@ -1,5 +1,5 @@
 <?php
-    /** @var \Framework\Http\Template\PhpRenderer $this */
+    /** @var Framework\Http\Template\PhpRenderer $this */
     $this->extend('layout/columns');
 ?>
 

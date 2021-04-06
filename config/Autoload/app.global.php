@@ -26,10 +26,10 @@ return [
                     return new Application(
                         $container->get(MiddlewareResolver::class),
                         $container->get(Router::class),
-                        new NotFoundHandler(),
+                        new NotFoundHandler(new TemplateRenderer()),
                         new Response());
                 },
-
+//закончил 2-45
             Router::class =>
                 function () {
                     return new AuraRouterAdapter(new RouterContainer());
@@ -44,7 +44,7 @@ return [
                 function (ContainerInterface $container) {
                     return new ErrorHandlerMiddleware($container->get('config')['debug']);
                 },
-            TemplateRenderer::class       => function (ContainerInterface $container) {
+            TemplateRenderer::class => function (ContainerInterface $container) {
                 return new PhpRenderer('templates', $container->get(Router::class));
             },
         ],

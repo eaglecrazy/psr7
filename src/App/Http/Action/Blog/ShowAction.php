@@ -24,6 +24,8 @@ class ShowAction
             return $next($request);
         }
 
-        return new HtmlResponse($this->template->render('app/blog/show', ['post' => $post]));
+        return new HtmlResponse($this->template->render('app/blog/show', [
+            'post' => $post
+        ]));
     }
 }
