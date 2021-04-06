@@ -1,5 +1,5 @@
 <?php
-/** @var \Framework\Http\Template\PhpRenderer $this */
+/** @var \Framework\Http\Template\Php\PhpRenderer $this */
 ?>
 
 <?php
@@ -8,7 +8,7 @@
 
 
 <?php
-    /** @var \Framework\Http\Template\PhpRenderer $this */
+    /** @var \Framework\Http\Template\Php\PhpRenderer $this */
     $this->extend('layout/default');
 ?>
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Framework\Http\Template;
+namespace Framework\Http\Template\Php;
 
 use Closure;
+use Exception;
 use Framework\Http\Router\Router;
+use Framework\Http\Template\TemplateRenderer;
 use SplStack;
-
-
-//Закончил 2-40
+use Throwable;
 
 class PhpRenderer implements TemplateRenderer
 {
@@ -30,18 +30,27 @@ class PhpRenderer implements TemplateRenderer
 
     public function render(string $name, $params = []): string
     {
-        $templateFile = $this->path . '/' . $name . '.php';
+        $level = ob_get_level();
+        try {
+            $templateFile = $this->path . '/' . $name . '.php';
 
-        ob_start();
+            ob_start();
 
-        extract($params, EXTR_OVERWRITE);
+            extract($params, EXTR_OVERWRITE);
 
-        $this->extend = null;
+            $this->extend = null;
 
-        require $templateFile;
-        $content = ob_get_clean();
-        if(!$this->extend){
-            return $content;
+            require $templateFile;
+            $content = ob_get_clean();
+            if(!$this->extend){
+                return $content;
+            }
+
+        } catch (Throwable|Exception $e){
+            while(ob_get_level() > $level){
+                ob_end_clean();
+            }
+            throw $e;
         }
 
         return $this->render($this->extend);

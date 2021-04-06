@@ -3,7 +3,7 @@
 ?>
 
 <?php
-    /** @var Framework\Http\Template\PhpRenderer $this */
+    /** @var \Framework\Http\Template\Php\PhpRenderer $this */
     $this->extend('layout/columns');
 ?>
 

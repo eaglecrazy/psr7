@@ -3,12 +3,8 @@
 namespace App\Http\Action\Blog;
 
 use App\ReadModel\PostReadRepository;
-use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
-use PDO;
-use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
 
 class IndexAction
 {

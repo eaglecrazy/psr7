@@ -1,7 +1,4 @@
 <?php
-/**
- * @var Framework\Template\PhpRenderer $this
- */
 
 $this->extend('layout/default');
 ?>

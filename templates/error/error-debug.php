@@ -1,8 +1,8 @@
 <?php
 /**
- * @var Framework\Template\PhpRenderer $this
  * @var Throwable $exception
  */
+
 ?>
 <!DOCTYPE html>
 <html>

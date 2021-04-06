@@ -8,7 +8,7 @@ use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
-use Framework\Http\Template\PhpRenderer;
+use Framework\Http\Template\Php\PhpRenderer;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Container\ContainerInterface;
 use Zend\Diactoros\Response;
@@ -26,10 +26,10 @@ return [
                     return new Application(
                         $container->get(MiddlewareResolver::class),
                         $container->get(Router::class),
-                        new NotFoundHandler(new TemplateRenderer()),
+                        $container->get(NotFoundHandler::class),
                         new Response());
                 },
-//закончил 2-45
+
             Router::class =>
                 function () {
                     return new AuraRouterAdapter(new RouterContainer());
@@ -42,7 +42,10 @@ return [
 
             ErrorHandlerMiddleware::class =>
                 function (ContainerInterface $container) {
-                    return new ErrorHandlerMiddleware($container->get('config')['debug']);
+                    return new ErrorHandlerMiddleware(
+                        $container->get('config')['debug'],
+                        $container->get(TemplateRenderer::class)
+                    );
                 },
             TemplateRenderer::class => function (ContainerInterface $container) {
                 return new PhpRenderer('templates', $container->get(Router::class));

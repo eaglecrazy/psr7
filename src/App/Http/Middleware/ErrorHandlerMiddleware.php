@@ -33,7 +33,7 @@ class ErrorHandlerMiddleware
             return new HtmlResponse($this->template->render($view, [
                 'request'   => $request,
                 'exception' => $e,
-            ]), 500);
+            ]), $e->getCode() ?: 500);
         }
     }
 }
