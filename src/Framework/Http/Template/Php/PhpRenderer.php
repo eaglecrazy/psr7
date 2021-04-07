@@ -121,4 +121,14 @@ class PhpRenderer implements TemplateRenderer
     {
          return $this->router->generate($name, $params);
     }
+
+    public function __call($name, $arguments)
+    {
+        foreach ($this->functions as $key => $function) {
+            if($key === $name){
+                return $function(...$arguments);
+            }
+        }
+        throw new \InvalidArgumentException('Undefined function "' . $name . '"');
+    }
 }
