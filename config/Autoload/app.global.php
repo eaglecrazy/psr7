@@ -8,6 +8,7 @@ use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
+use Framework\Http\Template\Php\Extension\RouteExtension;
 use Framework\Http\Template\Php\PhpRenderer;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Container\ContainerInterface;
@@ -47,8 +48,11 @@ return [
                         $container->get(TemplateRenderer::class)
                     );
                 },
-            TemplateRenderer::class => function (ContainerInterface $container) {
-                return new PhpRenderer('templates', $container->get(Router::class));
+            TemplateRenderer::class => function (ContainerInterface $container)
+            {
+                $renderer  = new PhpRenderer('templates');
+                $renderer->addExtension($container->get(RouteExtension::class));
+                return $renderer;
             },
         ],
     ],
