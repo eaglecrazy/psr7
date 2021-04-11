@@ -3,15 +3,17 @@
 use App\Http\Middleware\ErrorHandlerMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use Aura\Router\RouterContainer;
-
 use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
-use Framework\Http\Template\Php\Extension\RouteExtension;
-use Framework\Http\Template\Php\PhpRenderer;
 use Framework\Http\Template\TemplateRenderer;
+use Framework\Http\Template\Twig\Extension\TwigRouteExtension;
+use Framework\Http\Template\Twig\TwigRenderer;
 use Psr\Container\ContainerInterface;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
 use Zend\Diactoros\Response;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
@@ -48,12 +50,47 @@ return [
                         $container->get(TemplateRenderer::class)
                     );
                 },
+
             TemplateRenderer::class => function (ContainerInterface $container)
             {
-                $renderer  = new PhpRenderer('templates');
-                $renderer->addExtension($container->get(RouteExtension::class));
-                return $renderer;
+                return new TwigRenderer(
+                    $container->get(Environment::class),
+                    $container->get('config')['templates']['extension']);
             },
+            Environment::class => function (ContainerInterface $container)
+            {
+                $config = $container->get('config');
+
+                $templateDir = $config['twig']['template_dir'];
+                $cacheDir = $config['twig']['cache_dir'];
+                $debug = $config['debug'];
+
+                $loader = new FilesystemLoader();
+                $loader->addPath($templateDir);
+
+                $environment = new Environment($loader, [
+                    'cache'=> $debug ? false : $cacheDir,
+                    'debug' => $debug,
+                    'strict_variables' => $debug,
+                    'auto_reload' => $debug,
+                ]);
+
+                if($debug){
+                    $environment->addExtension(new DebugExtension());
+                }
+
+                $environment->addExtension($container->get(TwigRouteExtension::class));
+
+                foreach ($config['twig']['extensions'] as $extension) {
+                    $environment->addExtension($container->get($extension));
+                }
+
+
+                return $environment;
+            }
         ],
     ],
+
+        'debug' => false,
+//    'debug' => true,
 ];

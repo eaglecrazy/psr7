@@ -12,8 +12,11 @@ return [
                     return new BasicAuthMiddleware($container->get('config')['auth']['users'], new Response());
                 },
         ],
-        'auth' => [
-            'users' => []
-        ]
+    ],
+
+    'auth'  => [
+        'users' => [
+            'admin' => 'password'
+        ],
     ],
 ];
