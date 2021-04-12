@@ -2,14 +2,13 @@
 
 namespace Framework\Http;
 
-use App\Http\Middleware\NotFoundHandler;
-use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\RouteData;
 use Framework\Http\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Stratigility\Middleware\PathMiddlewareDecorator;
 use Zend\Stratigility\MiddlewarePipe;
 
 class Application implements MiddlewareInterface, RequestHandlerInterface
@@ -31,15 +30,15 @@ class Application implements MiddlewareInterface, RequestHandlerInterface
         $this->router            = $router;
         $this->default           = $default;
         $this->responsePrototype = $responsePrototype;
-        $this->pipeline->setResponsePrototype($responsePrototype);
     }
 
-    public function pipe($path, $middleware = null): MiddlewarePipe
+    public function pipe($path, $middleware = null): void
     {
         if ($middleware === null) {
-            return $this->pipeline->pipe($this->resolver->resolve($path));
+            $this->pipeline->pipe($this->resolver->resolve($path));
+        } else {
+            $this->pipeline->pipe(new PathMiddlewareDecorator($path, $this->resolver->resolve($middleware)));
         }
-        return $this->pipeline->pipe($path, $this->resolver->resolve($middleware));
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -66,14 +65,6 @@ class Application implements MiddlewareInterface, RequestHandlerInterface
     public function any($name, $path, $handler, array $options = []): void
     {
         $this->route($name, $path, $handler, [], $options);
-    }
-
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ): ResponseInterface {
-        return ($this->pipeline)($request, $response, $next);
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

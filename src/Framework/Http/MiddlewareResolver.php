@@ -65,7 +65,6 @@ class MiddlewareResolver
 
     private function createPipe(array $handlers): MiddlewarePipe {
         $pipeline = new MiddlewarePipe();
-        $pipeline->setResponsePrototype($this->responsePrototype);
         foreach ($handlers as $handler) {
             $pipeline->pipe($this->resolve($handler));
         }
