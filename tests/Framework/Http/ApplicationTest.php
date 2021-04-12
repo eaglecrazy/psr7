@@ -22,7 +22,7 @@ class ApplicationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resolver = new MiddlewareResolver(new DummyContainer());
+        $this->resolver = new MiddlewareResolver(new DummyContainer(), new Response());
         $this->router = $this->createMock(Router::class);
     }
 
@@ -33,7 +33,7 @@ class ApplicationTest extends TestCase
         $app->pipe(new Middleware1());
         $app->pipe(new Middleware2());
 
-        $response = $app->run(new ServerRequest(), new Response());
+        $response = $app->handle(new ServerRequest());
 
         $this->assertJsonStringEqualsJsonString(
             json_encode(['middleware-1' => 1, 'middleware-2' => 2]),

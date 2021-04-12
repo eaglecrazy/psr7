@@ -23,8 +23,8 @@ class MiddlewareResolverTest extends TestCase
      */
     public function testDirect($handler)
     {
-        $resolver   = new MiddlewareResolver(new DummyContainer());
-        $middleware = $resolver->resolve($handler, new Response());
+        $resolver   = new MiddlewareResolver(new DummyContainer(), new Response());
+        $middleware = $resolver->resolve($handler);
 
         /** @var ResponseInterface $response */
         $response = $middleware(
@@ -36,10 +36,30 @@ class MiddlewareResolverTest extends TestCase
         self::assertEquals([$value], $response->getHeader('X-Header'));
     }
 
+    public function testArray(): void
+    {
+        $resolver = new MiddlewareResolver(new DummyContainer(), new Response());
+
+        $middleware = $resolver->resolve([
+            new DummyMiddleware(),
+            new SinglePassMiddleware()
+        ]);
+
+        /** @var ResponseInterface $response */
+        $response = $middleware(
+            (new ServerRequest())->withAttribute('attribute', $value = 'value'),
+            new Response(),
+            new NotFoundMiddleware()
+        );
+
+        self::assertEquals(['dummy'], $response->getHeader('X-Dummy'));
+        self::assertEquals([$value], $response->getHeader('X-Header'));
+    }
+
     public function getValidHandlers()
     {
         return [
-            'Callable Callback'   => [
+            'SinglePass Callback'   => [
                 function (ServerRequestInterface $request, callable $next) {
                     if ($request->getAttribute('next')) {
                         return $next($request);
@@ -48,12 +68,12 @@ class MiddlewareResolverTest extends TestCase
                         ->withHeader('X-Header', $request->getAttribute('attribute'));
                 },
             ],
-            'Callable Class'      => [CallableMiddleware::class],
-            'Callable Object'     => [new CallableMiddleware()],
+            'SinglePass Class'      => [SinglePassMiddleware::class],
+            'SinglePass Object'     => [new SinglePassMiddleware()],
             'DoublePass Callback' => [
                 function (ServerRequestInterface $request, ResponseInterface $response, callable $next) {
                     if ($request->getAttribute('next')) {
-                        return $next($request);
+                        return $next($request, $response);
                     }
                     return $response
                         ->withHeader('X-Header', $request->getAttribute('attribute'));
@@ -67,7 +87,7 @@ class MiddlewareResolverTest extends TestCase
     }
 }
 
-class CallableMiddleware
+class SinglePassMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next)
     {
@@ -83,7 +103,7 @@ class DoublePassMiddleware
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         if ($request->getAttribute('next')) {
-            return $next($request);
+            return $next($request, $response);
         }
         return $response->withHeader('X-Header', $request->getAttribute('attribute'));
     }

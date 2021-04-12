@@ -24,10 +24,10 @@ class DispatchMiddleware
         //getAttribute(Result::class) - получает результат работы маршрутизатора
         if (!$result = $request->getAttribute(Result::class)) {
             //если его нет, то стандартный ответ - 404
-            return $next($request);
+            return $next($request, $response);
         }
         //роут найден, нормальная работа
-        $middleware = $this->resolver->resolve($result->getHandler(), $response);
+        $middleware = $this->resolver->resolve($result->getHandler());
         return $middleware($request, $response, $next);
     }
 }

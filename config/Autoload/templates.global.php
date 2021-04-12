@@ -1,53 +1,63 @@
 <?php
 
-use App\Http\Middleware\ErrorHandlerMiddleware;
-use App\Http\Middleware\NotFoundHandler;
-use Aura\Router\RouterContainer;
-use Framework\Http\Application;
-use Framework\Http\MiddlewareResolver;
-use Framework\Http\Router\AuraRouterAdapter;
-use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
+use Framework\Http\Template\Twig\Extension\TwigRouteExtension;
+use Framework\Http\Template\Twig\TwigRenderer;
 use Psr\Container\ContainerInterface;
-use Zend\Diactoros\Response;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
 
 return [
-    'factories' => [
-        Application::class =>
-            function (ContainerInterface $container) {
-                return new Application(
-                    $container->get(MiddlewareResolver::class),
-                    $container->get(Router::class),
-                    $container->get(NotFoundHandler::class),
-                    new Response());
+    'dependencies' => [
+        'factories' => [
+            TemplateRenderer::class => function (ContainerInterface $container)
+            {
+                return new TwigRenderer(
+                    $container->get(Environment::class),
+                    $container->get('config')['templates']['extension']);
             },
+            Environment::class => function (ContainerInterface $container)
+            {
+                $config = $container->get('config');
 
-        Router::class =>
-            function () {
-                return new AuraRouterAdapter(new RouterContainer());
-            },
+                $templateDir = $config['twig']['template_dir'];
+                $cacheDir = $config['twig']['cache_dir'];
+                $debug = $config['debug'];
 
-        MiddlewareResolver::class =>
-            function (ContainerInterface $container) {
-                return new MiddlewareResolver($container);
-            },
+                $loader = new FilesystemLoader();
+                $loader->addPath($templateDir);
 
-        ErrorHandlerMiddleware::class =>
-            function (ContainerInterface $container) {
-                return new ErrorHandlerMiddleware(
-                    $container->get('config')['debug'],
-                    $container->get(TemplateRenderer::class)
-                );
-            },
+                $environment = new Environment($loader, [
+                    'cache'=> $debug ? false : $cacheDir,
+                    'debug' => $debug,
+                    'strict_variables' => $debug,
+                    'auto_reload' => $debug,
+                ]);
+
+                if($debug){
+                    $environment->addExtension(new DebugExtension());
+                }
+
+                $environment->addExtension($container->get(TwigRouteExtension::class));
+
+                foreach ($config['twig']['extensions'] as $extension) {
+                    $environment->addExtension($container->get($extension));
+                }
+
+                return $environment;
+            }
+        ],
     ],
 
     'templates' => [
         'extension' => '.html.twig',
     ],
+
     'twig' => [
         'template_dir' => 'templates',
-        'cache_dir' => 'var/cache/twig',
-        'extensions' => [],
-    ]
+        'cache_dir'    => 'var/cache/twig',
+        'extensions'   => [],
+    ],
 
 ];

@@ -1,10 +1,8 @@
 <?php
 
 use Framework\Http\Application;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -18,7 +16,7 @@ require 'config/pipeline.php';
 require 'config/routes.php';
 
 $request  = ServerRequestFactory::fromGlobals();
-$response = $app->run($request, new Response());
+$response = $app->handle($request);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);
