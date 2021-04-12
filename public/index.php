@@ -1,5 +1,7 @@
 <?php
 
+ЗАКОНЧИЛ 38 минут
+
 use Framework\Http\Application;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
