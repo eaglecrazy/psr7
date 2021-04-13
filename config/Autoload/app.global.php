@@ -9,7 +9,6 @@ use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 

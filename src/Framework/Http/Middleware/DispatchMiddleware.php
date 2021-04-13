@@ -8,8 +8,10 @@ use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\Result;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class DispatchMiddleware
+class DispatchMiddleware implements MiddlewareInterface
 {
     private MiddlewareResolver $resolver;
 
@@ -19,15 +21,15 @@ class DispatchMiddleware
         $this->resolver = $resolver;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         //getAttribute(Result::class) - получает результат работы маршрутизатора
         if (!$result = $request->getAttribute(Result::class)) {
             //если его нет, то стандартный ответ - 404
-            return $next($request, $response);
+            return $handler->handle($request);
         }
         //роут найден, нормальная работа
         $middleware = $this->resolver->resolve($result->getHandler());
-        return $middleware($request, $response, $next);
+        return $middleware->process($request, $handler);
     }
 }

@@ -9,6 +9,8 @@ use Framework\Http\Router\Router;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
@@ -43,26 +45,3 @@ class ApplicationTest extends TestCase
 
 }
 
-class Middleware1
-{
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
-        return $next($request->withAttribute('middleware-1', 1));
-    }
-}
-
-class Middleware2
-{
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
-        return $next($request->withAttribute('middleware-2', 2));
-    }
-}
-
-class DefaultHandler
-{
-    public function __invoke(ServerRequestInterface $request)
-    {
-        return new JsonResponse($request->getAttributes());
-    }
-}

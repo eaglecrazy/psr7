@@ -13,16 +13,16 @@ use Zend\Stratigility\MiddlewarePipe;
 
 class Application implements MiddlewareInterface, RequestHandlerInterface
 {
-    private MiddlewareResolver $resolver;
-    private                    $default;
-    private Router             $router;
-    private MiddlewarePipe     $pipeline;
-    private ResponseInterface  $responsePrototype;
+    private MiddlewareResolver      $resolver;
+    private RequestHandlerInterface $default;
+    private Router                  $router;
+    private MiddlewarePipe          $pipeline;
+    private ResponseInterface       $responsePrototype;
 
     public function __construct(
         MiddlewareResolver $resolver,
         Router $router,
-        callable $default,
+        RequestHandlerInterface $default,
         ResponseInterface $responsePrototype
     ) {
         $this->pipeline          = new MiddlewarePipe();
@@ -43,8 +43,7 @@ class Application implements MiddlewareInterface, RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        //вызывается __invoke родительского класса
-        return $this($request, $this->responsePrototype, $this->default);
+        return $this->pipeline->process($request, $this->default);
     }
 
     public function route($name, $path, $handler, array $methods, array $options = []): void
