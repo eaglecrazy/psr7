@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Http\Action;
 
-
-use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
-use Framework\Views\HomePage;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
-class AboutAction
+class AboutAction implements RequestHandlerInterface
 {
     private TemplateRenderer $renderer;
 
@@ -17,7 +17,7 @@ class AboutAction
         $this->renderer = $renderer;
     }
 
-    public function __invoke(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse($this->renderer->render('app/about'));
     }

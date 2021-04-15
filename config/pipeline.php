@@ -7,7 +7,7 @@ use App\Http\Middleware\ProfilerMiddleware;
 use Framework\Http\Middleware\DispatchMiddleware;
 use Framework\Http\Middleware\RouteMiddleware;
 
-//$app->pipe(ErrorHandlerMiddleware::class);
+$app->pipe(ErrorHandlerMiddleware::class);
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
 $app->pipe(RouteMiddleware::class);
