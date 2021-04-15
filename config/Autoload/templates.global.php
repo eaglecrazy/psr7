@@ -29,10 +29,14 @@ return [
                 $loader->addPath($templateDir);
 
                 $environment = new Environment($loader, [
-                    'cache'=> $debug ? false : $cacheDir,
-                    'debug' => $debug,
-                    'strict_variables' => $debug,
-                    'auto_reload' => $debug,
+//                    'cache'=> $debug ? false : $cacheDir,
+                    'cache'=> false,
+//                    'debug' => $debug,
+                    'debug' => false,
+//                    'strict_variables' => $debug,
+                    'strict_variables' => false,
+//                    'auto_reload' => $debug,
+                    'auto_reload' => false,
                 ]);
 
                 if($debug){
