@@ -3,6 +3,7 @@
 namespace App\Http\Action;
 
 use Framework\Http\Template\TemplateRenderer;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,6 +20,7 @@ class AboutAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        throw new LogicException('Logic', 150);
         return new HtmlResponse($this->renderer->render('app/about'));
     }
 }
