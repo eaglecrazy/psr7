@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware\ErrorHandler;
 
-use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -11,9 +11,9 @@ use Throwable;
 
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {
-    private PrettyErrorResponseGenegator $responseGenerator;
+    private ErrorResponseGenegator $responseGenerator;
 
-    public function __construct(PrettyErrorResponseGenegator $responseGenerator)
+    public function __construct(ErrorResponseGenegator $responseGenerator)
     {
         $this->responseGenerator = $responseGenerator;
     }

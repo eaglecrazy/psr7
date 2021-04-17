@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
+use App\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
 use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
 use App\Http\Middleware\NotFoundHandler;
 use Aura\Router\RouterContainer;
@@ -38,18 +38,29 @@ return [
                 function (ContainerInterface $container) {
                     return new MiddlewareResolver($container, new Response());
                 },
-            PrettyErrorResponseGenegator::class => function(ContainerInterface $container){
 
+            ErrorResponseGenegator::class => function (ContainerInterface $container) {
+                //                return new PrettyErrorResponseGenegator(
+                //                    $container->get(TemplateRenderer::class),
 
-
+                //                );
                 return new PrettyErrorResponseGenegator(
-                    $container->get('config')['debug'],
-                    $container->get(TemplateRenderer::class)
+                    $container->get(TemplateRenderer::class),
+                    new Response(),
+                    $container->get('config')['debug'] ?
+                        [
+                            'error' => 'error/error-debug',
+                        ] :
+                        [
+                            'error' => 'error/error',
+                            '404'   => 'error/404',
+                            '403'   => 'error/403',
+                        ],
                 );
             },
         ],
     ],
 
-//        'debug' => false,
-    'debug' => true,
+            'debug' => false,
+//    'debug'        => true,
 ];

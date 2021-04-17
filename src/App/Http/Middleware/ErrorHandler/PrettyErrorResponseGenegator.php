@@ -3,43 +3,54 @@
 namespace App\Http\Middleware\ErrorHandler;
 
 use App\Http\Middleware\ErrorHandler;
-use App\Http\Middleware\Utils;
+
 use Framework\Http\Template\TemplateRenderer;
+
+use phpDocumentor\Reflection\Types\This;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response;
+use Zend\Stratigility\Utils;
 
-class PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegator
+class  PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegator
 {
 
-    private bool $debug;
     private TemplateRenderer $template;
+    private array $views;
+    private ResponseInterface $response;
 
-    public function __construct(bool $debug, TemplateRenderer $template)
+    public function __construct(TemplateRenderer $template, ResponseInterface $response, array $views)
     {
-        $this->debug    = $debug;
         $this->template = $template;
+        $this->views    = $views;
+        $this->response = $response;
     }
 
     public function generate(ServerRequestInterface $request, Throwable $e): ResponseInterface
     {
-        $view = $this->debug ? 'error/error-debug' : 'error/error';
+        $code = Utils::getStatusCode($e, $this->response);
+        $view = $this->getView($code);
 
-        return new HtmlResponse($this->template->render($view, [
-            'request'   => $request,
-            'exception' => $e,
-        ]), self::getStatusCode($e));
+        $response = $this->response->withStatus($code);
+
+        $response->getBody()->write(
+            $this->template->render($view, [
+                    'request'   => $request,
+                    'exception' => $e,
+                ]
+        ));
+
+        return $response;
     }
 
-    private static function getStatusCode(Throwable $e): int
+    private function getView(int $code)
     {
-        $code = $e->getCode();
-
-        if ($code >= 400 && $code < 600) {
-            return $code;
+        if(array_key_exists($code, $this->views)){
+            return $this->views[$code];
+        } else {
+            return $this->views['error'];
         }
-        return 500;
     }
 
 }
