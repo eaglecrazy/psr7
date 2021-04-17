@@ -2,13 +2,11 @@
 
 namespace Framework\Http\Middleware\ErrorHandler;
 
-use Framework\Http\Template\TemplateRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\RunInterface;
-use Zend\Diactoros\Response;
 use Zend\Stratigility\Utils;
 
 class WhoopsErrorResponseGenerator implements ErrorResponseGenegator

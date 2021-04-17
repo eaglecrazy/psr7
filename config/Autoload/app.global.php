@@ -1,16 +1,15 @@
 <?php
 
-use Framework\Http\Middleware\ErrorHandler\DebugErrorResponseGenegator;
-use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
-use Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
-use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use App\Http\Middleware\NotFoundHandler;
 use Aura\Router\RouterContainer;
 use Framework\Http\Application;
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
+use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
 use Psr\Container\ContainerInterface;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\RunInterface;
@@ -71,6 +70,6 @@ return [
         ],
     ],
 
-    //        'debug' => false,
+//            'debug' => false,
     'debug'        => true,
 ];
