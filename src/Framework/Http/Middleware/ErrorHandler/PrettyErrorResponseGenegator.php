@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Http\Middleware\ErrorHandler;
-
-use App\Http\Middleware\ErrorHandler;
+namespace Framework\Http\Middleware\ErrorHandler;
 
 use Framework\Http\Template\TemplateRenderer;
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-
 use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Stratigility\Utils;
 
-class PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegator
+class PrettyErrorResponseGenegator implements ErrorResponseGenegator
 {
     private TemplateRenderer $template;
     private array $views;

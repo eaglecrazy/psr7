@@ -20,6 +20,7 @@ class AboutAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+
         throw new LogicException('Logic', 404);
         return new HtmlResponse($this->renderer->render('app/about'));
     }

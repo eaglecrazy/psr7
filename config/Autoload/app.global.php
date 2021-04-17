@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Middleware\ErrorHandler\DebugErrorResponseGenegator;
-use App\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
-use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\DebugErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use App\Http\Middleware\NotFoundHandler;
 use Aura\Router\RouterContainer;
 use Framework\Http\Application;
@@ -11,6 +12,8 @@ use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Container\ContainerInterface;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\RunInterface;
 use Zend\Diactoros\Response;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
@@ -42,10 +45,9 @@ return [
 
             ErrorResponseGenegator::class => function (ContainerInterface $container) {
                 if ($container->get('config')['debug']) {
-                    return new DebugErrorResponseGenegator(
-                        $container->get(TemplateRenderer::class),
-                        new Response(),
-                        'error/error-debug');
+                    return new WhoopsErrorResponseGenerator(
+                        $container->get(RunInterface::class),
+                        new Response());
                 }
                 return new PrettyErrorResponseGenegator(
                     $container->get(TemplateRenderer::class),
@@ -57,9 +59,18 @@ return [
                     ],
                 );
             },
+
+            Whoops\RunInterface::class => function () {
+                $whoops = new Whoops\Run();
+                $whoops->writeToOutput(false);
+                $whoops->allowQuit(false);
+                $whoops->pushHandler(new PrettyPageHandler());
+                $whoops->register();
+                return $whoops;
+            },
         ],
     ],
 
-//        'debug' => false,
+    //        'debug' => false,
     'debug'        => true,
 ];
