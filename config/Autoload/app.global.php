@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ErrorHandler\DebugErrorResponseGenegator;
 use App\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
 use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
 use App\Http\Middleware\NotFoundHandler;
@@ -40,27 +41,25 @@ return [
                 },
 
             ErrorResponseGenegator::class => function (ContainerInterface $container) {
-                //                return new PrettyErrorResponseGenegator(
-                //                    $container->get(TemplateRenderer::class),
-
-                //                );
+                if ($container->get('config')['debug']) {
+                    return new DebugErrorResponseGenegator(
+                        $container->get(TemplateRenderer::class),
+                        new Response(),
+                        'error/error-debug');
+                }
                 return new PrettyErrorResponseGenegator(
                     $container->get(TemplateRenderer::class),
                     new Response(),
-                    $container->get('config')['debug'] ?
-                        [
-                            'error' => 'error/error-debug',
-                        ] :
-                        [
-                            'error' => 'error/error',
-                            '404'   => 'error/404',
-                            '403'   => 'error/403',
-                        ],
+                    [
+                        'error' => 'error/error',
+                        '404'   => 'error/404',
+                        '403'   => 'error/403',
+                    ],
                 );
             },
         ],
     ],
 
-            'debug' => false,
-//    'debug'        => true,
+//        'debug' => false,
+    'debug'        => true,
 ];

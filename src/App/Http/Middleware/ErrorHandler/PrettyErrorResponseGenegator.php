@@ -6,21 +6,21 @@ use App\Http\Middleware\ErrorHandler;
 
 use Framework\Http\Template\TemplateRenderer;
 
-use phpDocumentor\Reflection\Types\This;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
+
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Stratigility\Utils;
 
-class  PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegator
+class PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegator
 {
-
     private TemplateRenderer $template;
     private array $views;
-    private ResponseInterface $response;
+    private Response $response;
 
-    public function __construct(TemplateRenderer $template, ResponseInterface $response, array $views)
+    public function __construct(TemplateRenderer $template, Response $response,  array $views)
     {
         $this->template = $template;
         $this->views    = $views;
@@ -39,18 +39,19 @@ class  PrettyErrorResponseGenegator implements ErrorHandler\ErrorResponseGenegat
                     'request'   => $request,
                     'exception' => $e,
                 ]
-        ));
+            ));
 
         return $response;
     }
 
-    private function getView(int $code)
+    private function getView(int $code): string
     {
         if(array_key_exists($code, $this->views)){
-            return $this->views[$code];
+            $view = $this->views[$code];
         } else {
-            return $this->views['error'];
+            $view =  $this->views['error'];
         }
+        return $view;
     }
 
 }
