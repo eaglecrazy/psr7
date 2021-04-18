@@ -2,7 +2,7 @@
 
 namespace Infrastructure\Framework\Http\Middleware\ErrorHandler;
 
-use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
 use Framework\Http\Template\TemplateRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use Throwable;
 use Zend\Diactoros\Response;
 use Zend\Stratigility\Utils;
 
-class PrettyErrorResponseGenegator implements ErrorResponseGenegator
+class PrettyErrorResponseGenerator implements ErrorResponseGenerator
 {
     private TemplateRenderer $template;
     private array $views;

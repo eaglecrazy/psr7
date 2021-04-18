@@ -22,7 +22,9 @@
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-diactoros": "^1.7",
         "zendframework/zend-servicemanager": "^3.3",
-        "zendframework/zend-stratigility": "^3.0"
+        "zendframework/zend-stratigility": "^3.0",
+        "monolog/monolog": "^1.23",
+        "psr/log": "^1.0"
     },
     "autoload": {
         "psr-4": {

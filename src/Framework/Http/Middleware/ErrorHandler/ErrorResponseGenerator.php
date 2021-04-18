@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 
-interface ErrorResponseGenegator
+interface ErrorResponseGenerator
 {
     public function generate(ServerRequestInterface $request, Throwable $e): ResponseInterface;
 }

@@ -9,7 +9,7 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\RunInterface;
 use Zend\Stratigility\Utils;
 
-class WhoopsErrorResponseGenerator implements ErrorResponseGenegator
+class WhoopsErrorResponseGenerator implements ErrorResponseGenerator
 {
     private RunInterface      $whoops;
 

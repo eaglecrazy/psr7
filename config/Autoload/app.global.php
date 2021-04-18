@@ -3,14 +3,18 @@
 use App\Http\Middleware\NotFoundHandler;
 use Aura\Router\RouterContainer;
 use Framework\Http\Application;
-use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenegator;
+use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
 use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Http\Template\TemplateRenderer;
-use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenegator;
+use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\RunInterface;
 use Zend\Diactoros\Response;
@@ -42,13 +46,20 @@ return [
                     return new MiddlewareResolver($container, new Response());
                 },
 
-            ErrorResponseGenegator::class => function (ContainerInterface $container) {
+//            ErrorHandlerMiddleware::class => function(ContainerInterface $container){
+//                return new ErrorHandlerMiddleware(
+//                    $container->get(ErrorResponseGenerator::class),
+//                    $container->get(LoggerInterface::class),
+//                );
+//            },
+
+            ErrorResponseGenerator::class => function (ContainerInterface $container) {
                 if ($container->get('config')['debug']) {
                     return new WhoopsErrorResponseGenerator(
                         $container->get(RunInterface::class),
                         new Response());
                 }
-                return new PrettyErrorResponseGenegator(
+                return new PrettyErrorResponseGenerator(
                     $container->get(TemplateRenderer::class),
                     new Response(),
                     [
@@ -67,6 +78,15 @@ return [
                 $whoops->register();
                 return $whoops;
             },
+
+            LoggerInterface::class => function(ContainerInterface $container){
+                $logger = new Logger('App');
+                $logger->pushHandler(new StreamHandler(
+                    'var/log/application.log',
+                    $container->get('config')['debug'] ? Logger::DEBUG : Logger::WARNING
+                ));
+                return $logger;
+            }
         ],
     ],
 
