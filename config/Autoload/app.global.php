@@ -16,6 +16,8 @@ use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
+закончил 3-50
+
 return [
     'dependencies' => [
         'abstract_factories' => [
