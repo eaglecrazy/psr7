@@ -41,6 +41,8 @@
     },
     "scripts": {
         "test": "phpunit",
-        "serve": "php -S 0.0.0.0:8080 -t public"
+        "serve": "php -S 0.0.0.0:8080 -t public",
+        "dev": "cp config/Autoload/development.global.php.dist config/Autoload/development.global.php",
+        "prod": "rm config/Autoload/development.global.php"
     }
 }

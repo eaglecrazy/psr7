@@ -5,23 +5,16 @@ use Aura\Router\RouterContainer;
 use Framework\Http\Application;
 use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
 use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
-use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
-use Framework\Http\Template\TemplateRenderer;
-use Infrastructure\Framework\Http\Middleware\ErrorHandler\LogErrorListener;
-use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Infrastructure\App\Logger\LoggerFactory;
+use Infrastructure\Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddlewareFactory;
+use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGeneratorFactory;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Whoops\Handler\PrettyPageHandler;
-use Whoops\RunInterface;
 use Zend\Diactoros\Response;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
-
-закончил 3-43
 
 return [
     'dependencies' => [
@@ -49,37 +42,11 @@ return [
                     return new MiddlewareResolver($container, new Response());
                 },
 
-            ErrorHandlerMiddleware::class => function(ContainerInterface $container){
-                $middleware = new ErrorHandlerMiddleware(
-                    $container->get(ErrorResponseGenerator::class),
-                );
-                $middleware->addListener($container->get(LogErrorListener::class));
-                return $middleware;
-            },
+            ErrorHandlerMiddleware::class => ErrorHandlerMiddlewareFactory::class,
 
-            ErrorResponseGenerator::class => function (ContainerInterface $container) {
-                return new PrettyErrorResponseGenerator(
-                    $container->get(TemplateRenderer::class),
-                    new Response(),
-                    [
-                        'error' => 'error/error',
-                        '404'   => 'error/404',
-                        '403'   => 'error/403',
-                    ],
-                );
-            },
+            ErrorResponseGenerator::class => PrettyErrorResponseGeneratorFactory::class,
 
-            LoggerInterface::class => function(ContainerInterface $container){
-                $logger = new Logger('App');
-                $logger->pushHandler(new StreamHandler(
-                    'var/log/application.log',
-                    $container->get('config')['debug'] ? Logger::DEBUG : Logger::WARNING
-                ));
-                return $logger;
-            }
+            LoggerInterface::class => LoggerFactory::class,
         ],
     ],
-
-//            'debug' => false,
-    'debug'        => true,
 ];
