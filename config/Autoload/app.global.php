@@ -9,8 +9,11 @@ use Framework\Http\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Infrastructure\App\Logger\LoggerFactory;
+use Infrastructure\Framework\Http\ApplicationFactory;
 use Infrastructure\Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddlewareFactory;
 use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGeneratorFactory;
+use Infrastructure\Framework\Http\Pipeline\MiddlewareResolverFactory;
+use Infrastructure\Framework\Http\Router\AuraRouterFactory;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response;
@@ -25,24 +28,12 @@ return [
         ],
 
         'factories' => [
-            Application::class =>
-                function (ContainerInterface $container) {
-                    return new Application(
-                        $container->get(MiddlewareResolver::class),
-                        $container->get(Router::class),
-                        $container->get(NotFoundHandler::class),
-                        new Response());
-                },
 
-            Router::class =>
-                function () {
-                    return new AuraRouterAdapter(new RouterContainer());
-                },
+            Application::class => ApplicationFactory::class,
 
-            MiddlewareResolver::class =>
-                function (ContainerInterface $container) {
-                    return new MiddlewareResolver($container, new Response());
-                },
+            Router::class => AuraRouterFactory::class,
+
+            MiddlewareResolver::class => MiddlewareResolverFactory::class,
 
             ErrorHandlerMiddleware::class => ErrorHandlerMiddlewareFactory::class,
 
