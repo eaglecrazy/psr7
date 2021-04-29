@@ -5,6 +5,7 @@ use Zend\ConfigAggregator\PhpFileProvider;
 
 $aggregator = new ConfigAggregator([
     new PhpFileProvider(__DIR__ . '/autoload/{{,*.}global,{,*.}local}.php'),
-]);
+],
+'var/config-cache.php');
 
 return $aggregator->getMergedConfig();
