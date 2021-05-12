@@ -34,5 +34,4 @@ class Result
     {
         return $this->attributes;
     }
-
 }

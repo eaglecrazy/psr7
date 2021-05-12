@@ -8,7 +8,8 @@ use Psr\Container\ContainerInterface;
 
 class LoggerFactory
 {
-    public function __invoke(ContainerInterface $container){
+    public function __invoke(ContainerInterface $container)
+    {
         $logger = new Logger('App');
         $logger->pushHandler(new StreamHandler(
             'var/log/application.log',

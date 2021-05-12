@@ -8,7 +8,8 @@ use Zend\Diactoros\Response;
 
 class MiddlewareResolverFactory
 {
-    function __invoke(ContainerInterface $container) {
+    function __invoke(ContainerInterface $container)
+    {
         return new MiddlewareResolver($container, new Response());
     }
 }

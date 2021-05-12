@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Next
 {
     private ResponseInterface $response;
-    private                   $default;
+    private $default;
     private \SplQueue         $queue;
 
     public function __construct(callable $default, ResponseInterface $response, \SplQueue $queue)
@@ -27,9 +27,8 @@ class Next
 
         $current = $this->queue->dequeue();
 
-        return $current($request, $this->response, function (ServerRequestInterface $request)
-    {
-        return $this($request);
-    });
+        return $current($request, $this->response, function (ServerRequestInterface $request) {
+            return $this($request);
+        });
     }
 }

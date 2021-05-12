@@ -13,6 +13,7 @@ class WhoopsErrorResponseGeneratorFactory
     {
         return new WhoopsErrorResponseGenerator(
             $container->get(RunInterface::class),
-            new Response());
+            new Response()
+        );
     }
 }

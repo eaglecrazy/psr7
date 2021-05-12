@@ -33,5 +33,4 @@ class LogErrorListener
             'body'    => $request->getParsedBody(),
         ];
     }
-
 }

@@ -81,7 +81,7 @@ class AuraRouterAdapter implements Router
             }
         }
 
-        if($routeData->methods){
+        if ($routeData->methods) {
             $route->allows($routeData->methods);
         }
 

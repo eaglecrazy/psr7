@@ -12,6 +12,7 @@ class TemplateRendererFactory
     {
         return new TwigRenderer(
             $container->get(Environment::class),
-            $container->get('config')['templates']['extension']);
+            $container->get('config')['templates']['extension']
+        );
     }
 }

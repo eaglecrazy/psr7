@@ -17,6 +17,7 @@ class PrettyErrorResponseGeneratorFactory
                 'error' => 'error/error',
                 '404'   => 'error/404',
                 '403'   => 'error/403',
-            ]);
+            ]
+        );
     }
 }

@@ -125,7 +125,7 @@ class PhpRenderer implements TemplateRenderer
             foreach ($extension->getFunctions() as $function) {
                 /** @var SimpleFunction $function */
                 if ($function->name === $name) {
-                    if($function->needRenderer) {
+                    if ($function->needRenderer) {
                         return ($function->callback)($this, ...$arguments);
                     }
                     return ($function->callback)(...$arguments);
@@ -134,5 +134,4 @@ class PhpRenderer implements TemplateRenderer
         }
         throw new \InvalidArgumentException('Undefined function "' . $name . '"');
     }
-
 }

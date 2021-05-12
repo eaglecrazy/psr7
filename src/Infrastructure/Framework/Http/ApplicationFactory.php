@@ -17,6 +17,7 @@ class ApplicationFactory
             $container->get(MiddlewareResolver::class),
             $container->get(Router::class),
             $container->get(NotFoundHandler::class),
-            new Response());
+            new Response()
+        );
     }
 }

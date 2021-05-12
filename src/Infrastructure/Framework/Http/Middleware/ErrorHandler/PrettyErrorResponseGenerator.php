@@ -16,7 +16,7 @@ class PrettyErrorResponseGenerator implements ErrorResponseGenerator
     private array $views;
     private Response $response;
 
-    public function __construct(TemplateRenderer $template, Response $response,  array $views)
+    public function __construct(TemplateRenderer $template, Response $response, array $views)
     {
         $this->template = $template;
         $this->views    = $views;
@@ -34,20 +34,19 @@ class PrettyErrorResponseGenerator implements ErrorResponseGenerator
             $this->template->render($view, [
                     'request'   => $request,
                     'exception' => $e,
-                ]
-            ));
+                ])
+        );
 
         return $response;
     }
 
     private function getView(int $code): string
     {
-        if(array_key_exists($code, $this->views)){
+        if (array_key_exists($code, $this->views)) {
             $view = $this->views[$code];
         } else {
             $view =  $this->views['error'];
         }
         return $view;
     }
-
 }

@@ -23,7 +23,7 @@ class ResponseLoggerMiddleware implements MiddlewareInterface
 
         $code = $response->getStatusCode();
 
-        if ($code >= 400 && $code <= 600 ) {
+        if ($code >= 400 && $code <= 600) {
             $this->logger->error($response->getReasonPhrase(), [
                 'method' => $request->getMethod(),
                 'url'    => (string) $request->getUri()]);

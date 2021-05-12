@@ -3,11 +3,11 @@
 
 namespace Framework\Http\Template\Twig;
 
-
 use Framework\Http\Template\TemplateRenderer;
 use Twig\Environment;
 
-class TwigRenderer implements TemplateRenderer{
+class TwigRenderer implements TemplateRenderer
+{
 
     private Environment $twig;
     private string      $extension;

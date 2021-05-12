@@ -16,6 +16,5 @@ class ProfilerMiddleware implements MiddlewareInterface
         $stop = microtime(true);
 
         return $response->withHeader('X-Profiler-Time', $stop - $start);
-
     }
 }

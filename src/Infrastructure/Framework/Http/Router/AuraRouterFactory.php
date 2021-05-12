@@ -7,7 +7,8 @@ use Framework\Http\Router\AuraRouterAdapter;
 
 class AuraRouterFactory
 {
-    function __invoke() {
+    function __invoke()
+    {
         return new AuraRouterAdapter(new RouterContainer());
     }
 }

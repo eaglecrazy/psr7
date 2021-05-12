@@ -14,7 +14,8 @@ class UnknownMiddlewareTypeException extends \InvalidArgumentException
         $this->type = $type;
     }
 
-    public function getType(){
+    public function getType()
+    {
         return $this->type;
     }
 }

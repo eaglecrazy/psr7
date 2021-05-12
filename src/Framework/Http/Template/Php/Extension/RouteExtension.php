@@ -20,7 +20,7 @@ class RouteExtension extends Extension
     {
         return [
             new SimpleFunction('path', [$this, 'generatePath']),
-            new SimpleFunction('map',  [$this, 'map'], true),
+            new SimpleFunction('map', [$this, 'map'], true),
         ];
     }
 
