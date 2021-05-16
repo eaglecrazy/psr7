@@ -14,8 +14,6 @@ use Infrastructure\Framework\Http\Router\AuraRouterFactory;
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
-//закончил 3-50
-
 return [
     'dependencies' => [
         'abstract_factories' => [
@@ -39,5 +37,5 @@ return [
     ],
 
     'debug' => false,
-    'config_cache_enabled' => true,
+    'config_cache_enabled' => false,
 ];

@@ -22,7 +22,7 @@ class TwigEnvironmentFactory
         $loader->addPath($templateDir);
 
         $environment = new Environment($loader, [
-            'cache'            => false,
+            'cache'            => 'var/cache/twig',
             'debug'            => false,
             'strict_variables' => false,
             'auto_reload'      => false,
