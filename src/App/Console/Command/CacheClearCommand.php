@@ -1,54 +1,52 @@
 <?php
 
+конец 1-03
+
 namespace App\Console\Command;
 
-
+use Framework\Console\Input;
+use Framework\Console\Output;
 use InvalidArgumentException;
 use RuntimeException;
-use function Zend\Stratigility\path;
 
 class CacheClearCommand
 {
-    49 минут
-
     private array $paths = [
         'twig' => 'var/cache/twig',
-        'log' => 'var/log',
+        'log'  => 'var/log',
     ];
 
-    public function execute(array $args)
+    public function execute(Input $input, Output $output)
     {
-//        $alias = $args[0];
+        $alias = $input->getArgument(0);
 
-            fwrite(STDOUT, 'Input path: ');
-            $alias = trim(fgets(STDIN));
-            print_r($alias);
-            die();
-
-        if(!empty($alias)){
-            if(!array_key_exists($alias, $this->paths)){
-                throw new InvalidArgumentException('Unknown path alias "' . $alias . '"' . PHP_EOL);
-            }
-            $path = $this->paths[$alias];
-            if(file_exists($path)){
-                echo 'Remove ' . $path . PHP_EOL;
-                self::delete($path);
-            }
-        } else {
-            foreach ($this->paths as $path){
-                if(!file_exists($path)){
-                    continue;
-                }
-                echo 'Remove ' . $path . PHP_EOL;
-                self::delete($path);
-            }
+        if (empty($alias)) {
+            $alias = $input->choose('Chooser path', array_merge(['all'], array_keys($this->paths)));
         }
 
-        echo 'Done!' . PHP_EOL;
+        if ($alias == 'all') {
+            $paths = $this->paths;
+        } else {
+            if (!array_key_exists($alias, $this->paths)) {
+                throw new InvalidArgumentException('Unknown path alias "' . $alias . '"' . PHP_EOL);
+            }
+            $paths = [$alias => $this->paths[$alias]];
+        }
+
+        foreach ($this->paths as $path) {
+            if (file_exists($path)) {
+                $output->writeln('Remove ' . $path);
+                self::delete($path, $output);
+            } else {
+                $output->writeln('Skip ' . $path);
+            }
+
+        }
+
+        $output->writeln('Done!');
     }
 
-
-    private function delete(string $path): void
+    private function delete(string $path, Output $output): void
     {
         if (!file_exists($path)) {
             throw new RuntimeException('Undefined path ' . $path);
@@ -59,15 +57,15 @@ class CacheClearCommand
                 if ($item === '.' || $item === '..') {
                     continue;
                 }
-                $this->delete($path . DIRECTORY_SEPARATOR . $item);
+                $this->delete($path . DIRECTORY_SEPARATOR . $item, $output);
 
-                echo 'Remove ' . $path . PHP_EOL;
+                $output->writeln('Remove ' . $path);
             }
             if (!rmdir($path)) {
                 throw new RuntimeException('Unable to delete directory ' . $path);
             }
         } else {
-            echo 'Remove ' . $path . PHP_EOL;
+            $output->writeln('Remove ' . $path);
             if (!unlink($path)) {
                 throw new RuntimeException('Unable to delete file ' . $path);
             };

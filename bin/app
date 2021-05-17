@@ -2,6 +2,8 @@
 <?php
 
 use App\Console\Command\CacheClearCommand;
+use Framework\Console\Input;
+use Framework\Console\Output;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -12,5 +14,6 @@ $container = require 'config/container.php';
 $command = $container->get(CacheClearCommand::class);
 
 $args = array_slice($argv, 1);
+$input = new Input($args);
 
-$command->execute($args);
+$command->execute($input, new Output());
