@@ -1,7 +1,5 @@
 <?php
 
-конец 1-03
-
 namespace App\Console\Command;
 
 use Framework\Console\Input;
@@ -11,13 +9,17 @@ use RuntimeException;
 
 class CacheClearCommand
 {
-    private array $paths = [
-        'twig' => 'var/cache/twig',
-        'log'  => 'var/log',
-    ];
+    private array $paths;
+
+    public function __construct(array $paths)
+    {
+        $this->paths = $paths;
+    }
 
     public function execute(Input $input, Output $output)
     {
+        $output->writeln('<comment>Clearing </comment><info>cache!</info>');
+
         $alias = $input->getArgument(0);
 
         if (empty($alias)) {
@@ -33,42 +35,42 @@ class CacheClearCommand
             $paths = [$alias => $this->paths[$alias]];
         }
 
-        foreach ($this->paths as $path) {
+        foreach ($paths as $path) {
             if (file_exists($path)) {
                 $output->writeln('Remove ' . $path);
                 self::delete($path, $output);
             } else {
-                $output->writeln('Skip ' . $path);
+                $output->comment('Skip ' . $path);
             }
 
         }
 
-        $output->writeln('Done!');
+        $output->info('Done!');
     }
 
-    private function delete(string $path, Output $output): void
-    {
-        if (!file_exists($path)) {
-            throw new RuntimeException('Undefined path ' . $path);
-        }
-
-        if (is_dir($path)) {
-            foreach (scandir($path, SCANDIR_SORT_ASCENDING) as $item) {
-                if ($item === '.' || $item === '..') {
-                    continue;
-                }
-                $this->delete($path . DIRECTORY_SEPARATOR . $item, $output);
-
-                $output->writeln('Remove ' . $path);
-            }
-            if (!rmdir($path)) {
-                throw new RuntimeException('Unable to delete directory ' . $path);
-            }
-        } else {
-            $output->writeln('Remove ' . $path);
-            if (!unlink($path)) {
-                throw new RuntimeException('Unable to delete file ' . $path);
-            };
-        }
-    }
+//    private function delete(string $path, Output $output): void
+//    {
+//        if (!file_exists($path)) {
+//            throw new RuntimeException('Undefined path ' . $path);
+//        }
+//
+//        if (is_dir($path)) {
+//            foreach (scandir($path, SCANDIR_SORT_ASCENDING) as $item) {
+//                if ($item === '.' || $item === '..') {
+//                    continue;
+//                }
+//                $this->delete($path . DIRECTORY_SEPARATOR . $item, $output);
+//
+//                $output->writeln('Remove ' . $path);
+//            }
+//            if (!rmdir($path)) {
+//                throw new RuntimeException('Unable to delete directory ' . $path);
+//            }
+//        } else {
+//            $output->writeln('Remove ' . $path);
+//            if (!unlink($path)) {
+//                throw new RuntimeException('Unable to delete file ' . $path);
+//            };
+//        }
+//    }
 }

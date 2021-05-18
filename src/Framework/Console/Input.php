@@ -8,7 +8,6 @@ class Input
 
     public function __construct(array $argv)
     {
-//        $this->args = array_slice($argv, 1);
         $this->args = $argv;
     }
 
