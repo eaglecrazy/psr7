@@ -1,6 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+
+закончил 1-35
+
+
+
 use App\Console\Command\CacheClearCommand;
 use Framework\Console\Input;
 use Framework\Console\Output;
@@ -10,10 +15,35 @@ require 'vendor/autoload.php';
 
 $container = require 'config/container.php';
 
+$commands = [
+        $container->get(CacheClearCommand::class),
+        $container->get(CacheClearCommand::class),
+        $container->get(CacheClearCommand::class),
+];
+
+
 /** @var CacheClearCommand $command */
 $command = $container->get(CacheClearCommand::class);
 
-$args = array_slice($argv, 1);
-$input = new Input($args);
+$input  = new Input($argv);
+$output = new Output();
 
-$command->execute($input, new Output());
+$name = $input->getArgument(0);
+
+if (!empty($name)) {
+    foreach ($commands as $command) {
+        if ($command->getName() === $name) {
+            $command->execute($input, $output);
+            exit;
+        }
+    }
+    throw new InvalidArgumentException('Undefinde command ' . $name);
+}
+
+$output->writeln('<comment>Avalaible commands:</comment>');
+$output->writeln('');
+foreach ($commands as $command) {
+    $output->writeln('<info>' . $command->getName()  .'</info>' . "\t" . $command->getDescription());
+}
+$output->writeln('');
+

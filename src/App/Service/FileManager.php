@@ -5,8 +5,6 @@ namespace App\Service;
 use Framework\Console\Output;
 use RuntimeException;
 
-закончил в 1-14
-
 class FileManager
 {
     public function exists(string $path):bool

@@ -8,7 +8,7 @@ class Input
 
     public function __construct(array $argv)
     {
-        $this->args = $argv;
+        $this->args = array_slice($argv, 1);
     }
 
     public function getArgument(int $index)

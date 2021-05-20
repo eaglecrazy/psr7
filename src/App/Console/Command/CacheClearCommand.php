@@ -2,31 +2,40 @@
 
 namespace App\Console\Command;
 
+use App\Service\FileManager;
+use Framework\Console\Command;
 use Framework\Console\Input;
 use Framework\Console\Output;
 use InvalidArgumentException;
-use RuntimeException;
 
-class CacheClearCommand
+class CacheClearCommand extends Command
 {
-    private array $paths;
+    private array  $paths;
 
-    public function __construct(array $paths)
+    /**
+     * @var FileManager
+     */
+    private FileManager $files;
+
+    public function __construct(array $paths, FileManager $files)
     {
-        $this->paths = $paths;
+        $this->paths       = $paths;
+        $this->files       = $files;
+        $this->name        = 'cache:clear';
+        $this->description = 'Clear cache';
     }
 
-    public function execute(Input $input, Output $output)
+    public function execute(Input $input, Output $output): void
     {
         $output->writeln('<comment>Clearing </comment><info>cache!</info>');
 
-        $alias = $input->getArgument(0);
+        $alias = $input->getArgument(1);
 
         if (empty($alias)) {
             $alias = $input->choose('Chooser path', array_merge(['all'], array_keys($this->paths)));
         }
 
-        if ($alias == 'all') {
+        if ($alias === 'all') {
             $paths = $this->paths;
         } else {
             if (!array_key_exists($alias, $this->paths)) {
@@ -36,41 +45,14 @@ class CacheClearCommand
         }
 
         foreach ($paths as $path) {
-            if (file_exists($path)) {
+            if ($this->files->exists($path)) {
                 $output->writeln('Remove ' . $path);
-                self::delete($path, $output);
+                $this->files->delete($path, $output);
             } else {
                 $output->comment('Skip ' . $path);
             }
-
         }
 
         $output->info('Done!');
     }
-
-//    private function delete(string $path, Output $output): void
-//    {
-//        if (!file_exists($path)) {
-//            throw new RuntimeException('Undefined path ' . $path);
-//        }
-//
-//        if (is_dir($path)) {
-//            foreach (scandir($path, SCANDIR_SORT_ASCENDING) as $item) {
-//                if ($item === '.' || $item === '..') {
-//                    continue;
-//                }
-//                $this->delete($path . DIRECTORY_SEPARATOR . $item, $output);
-//
-//                $output->writeln('Remove ' . $path);
-//            }
-//            if (!rmdir($path)) {
-//                throw new RuntimeException('Unable to delete directory ' . $path);
-//            }
-//        } else {
-//            $output->writeln('Remove ' . $path);
-//            if (!unlink($path)) {
-//                throw new RuntimeException('Unable to delete file ' . $path);
-//            };
-//        }
-//    }
 }
