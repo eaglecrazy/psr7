@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use Framework\Console\Output;
 use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class FileManager
 {
@@ -12,7 +12,7 @@ class FileManager
         return file_exists($path);
     }
 
-    public function delete(string $path, Output $output): void
+    public function delete(string $path, OutputInterface $output): void
     {
         if (!file_exists($path)) {
             throw new RuntimeException('Undefined path ' . $path);

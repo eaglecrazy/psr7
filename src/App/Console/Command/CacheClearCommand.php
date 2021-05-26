@@ -3,14 +3,17 @@
 namespace App\Console\Command;
 
 use App\Service\FileManager;
-use Framework\Console\Command;
-use Framework\Console\Input;
-use Framework\Console\Output;
+
 use InvalidArgumentException;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class CacheClearCommand extends Command
 {
-    private array  $paths;
+    private array $paths;
 
     /**
      * @var FileManager
@@ -19,20 +22,29 @@ class CacheClearCommand extends Command
 
     public function __construct(array $paths, FileManager $files)
     {
-        $this->paths       = $paths;
-        $this->files       = $files;
-        $this->name        = 'cache:clear';
-        $this->description = 'Clear cache';
+        $this->paths = $paths;
+        $this->files = $files;
+        parent::__construct();
     }
 
-    public function execute(Input $input, Output $output): void
+    protected function configure(): void
+    {
+        $this->setName('cache:clear')
+            ->setDescription('Clear cache')
+            ->addArgument('alias', InputArgument::OPTIONAL, 'The alias of available paths.');
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln('<comment>Clearing </comment><info>cache!</info>');
 
-        $alias = $input->getArgument(1);
+        $alias = $input->getArgument('alias');
 
         if (empty($alias)) {
-            $alias = $input->choose('Chooser path', array_merge(['all'], array_keys($this->paths)));
+            $helper = $this->getHelper('question');
+            $options = array_merge(['all'], array_keys($this->paths));
+            $question = new ChoiceQuestion('Choose path', $options, 0);
+            $alias = $helper->ask($input, $output, $question);
         }
 
         if ($alias === 'all') {
@@ -49,10 +61,10 @@ class CacheClearCommand extends Command
                 $output->writeln('Remove ' . $path);
                 $this->files->delete($path, $output);
             } else {
-                $output->comment('Skip ' . $path);
+                $output->writeln('<comment>Skip</comment>' . $path);
             }
         }
 
-        $output->info('Done!');
+        $output->writeln('<info>Done!</info>');
     }
 }
