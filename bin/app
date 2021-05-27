@@ -1,8 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-//закончил на 2-13
-
 use Symfony\Component\Console\Application;
 
 chdir(dirname(__DIR__));
