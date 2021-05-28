@@ -1,6 +1,6 @@
 <?php
 
-namespace Infrastructure\App\Console;
+namespace Infrastructure\App\Console\Command;
 
 use App\Console\Command\CacheClearCommand;
 use App\Service\FileManager;

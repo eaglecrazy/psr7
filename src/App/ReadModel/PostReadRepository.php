@@ -2,66 +2,58 @@
 
 namespace App\ReadModel;
 
-use App\ReadModel\Views\PostView;
-use DateTimeImmutable;
-use Exception;
-use PDO;
+use App\Entity\Post\Post;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 class PostReadRepository
 {
 
-    private PDO $pdo;
+    private EntityRepository $repository;
 
-    public function __construct(PDO $pdo)
+    public function __construct(EntityRepository $repository)
     {
-        $this->pdo = $pdo;
+        $this->repository = $repository;
     }
 
     /**
-     * @return PostView[]
-     * @throws Exception
+     * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function getAll(int $limit = 10, int $offset = 0): array
+    public function countAll(): int
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM posts ORDER BY id DESC LIMIT ? OFFSET ?');
-        $stmt->execute([$limit, $offset]);
-
-        return array_map([$this, 'hydratePost'], $stmt->fetchAll());
+        return $this->repository
+            ->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
-     * @throws Exception
+     * @param int $limit
+     * @param int $offset
+     * @return array
      */
-    public function find($id): ?PostView
+    public function all(int $limit = 10, int $offset = 0): array
     {
-        $stmt = $this->pdo->prepare('select * from posts where id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return ($row ? $this->hydratePost($row) : null);
-
+        return $this->repository
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->orderBy('p.createDate', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
-     * @throws Exception
+     * @param $id
+     * @return Post|object|null
      */
-    private function hydratePost(array $row): PostView
+    public function find($id): ?Post
     {
-        $view = new PostView();
-
-        $view->id      = $row['id'];
-        $view->date    = new DateTimeImmutable($row['date']);
-        $view->title   = $row['title'];
-        $view->content = $row['content'];
-
-        return $view;
-    }
-
-    public function countAll()
-    {
-        $stmt = $this->pdo->query('select COUNT(id) FROM posts');
-        return $stmt->fetchColumn();
+        return $this->repository->find($id);
     }
 }

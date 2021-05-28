@@ -42,7 +42,7 @@ class IndexAction implements RequestHandlerInterface
             self::PER_PAGE
         );
 
-        $posts = $this->posts->getAll($pager->getLimit(), $pager->getOffset());
+        $posts = $this->posts->all($pager->getLimit(), $pager->getOffset());
 
         return new HtmlResponse($this->template->render('app/blog/index', [
             'posts' => $posts,

@@ -11,9 +11,10 @@ use Infrastructure\Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware
 use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGeneratorFactory;
 use Infrastructure\Framework\Http\Pipeline\MiddlewareResolverFactory;
 use Infrastructure\Framework\Http\Router\AuraRouterFactory;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
+use App\ReadModel\PostReadRepository;
+use Infrastructure\App\ReadModel\PostReadRepositoryFactory;
 
 return [
     'dependencies' => [
@@ -22,41 +23,17 @@ return [
         ],
 
         'factories' => [
-
-            Application::class => ApplicationFactory::class,
-
-            Router::class => AuraRouterFactory::class,
-
-            MiddlewareResolver::class => MiddlewareResolverFactory::class,
-
+            Application::class            => ApplicationFactory::class,
+            Router::class                 => AuraRouterFactory::class,
+            MiddlewareResolver::class     => MiddlewareResolverFactory::class,
             ErrorHandlerMiddleware::class => ErrorHandlerMiddlewareFactory::class,
-
             ErrorResponseGenerator::class => PrettyErrorResponseGeneratorFactory::class,
+            LoggerInterface::class        => LoggerFactory::class,
 
-            LoggerInterface::class => LoggerFactory::class,
-
-            PDO::class => function (ContainerInterface $container) {
-                $config = $container->get('config')['pdo'];
-
-                return new PDO(
-                    $config['dsn'],
-                    $config['username'],
-                    $config['password'],
-                    $config['options'],
-                );
-            },
+            PostReadRepository::class => PostReadRepositoryFactory::class,
         ],
     ],
 
-    'pdo' => [
-        'dsn'      => 'sqlite:db/db.sqlite',
-        'username' => '',
-        'password' => '',
-        'options' => [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ],
-    ],
+    'debug' => false,
 
-    'debug'                => false,
-    'config_cache_enabled' => false,
 ];

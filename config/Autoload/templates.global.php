@@ -23,4 +23,8 @@ return [
         'extensions'   => [],
     ],
 
+    'cachePaths' => [
+        'twig' => 'var/cache/twig',
+    ],
+
 ];

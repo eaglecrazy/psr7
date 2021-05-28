@@ -1,16 +1,18 @@
 <?php
 return [
-    'auth'  => [
+    'auth'     => [
         'users' => [
-        'admin' => 'password'
+            'admin' => 'password',
         ],
     ],
-    'pdo' => [
-        'dsn'      => 'sqlite:db/db.sqlite',
-        'username' => '',
-        'password' => '',
-    ],
-    'phinx' => [
-        'database' => 'db/db.sqlite',
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => [
+                    'url' => 'sqlite::db/db.sqlite',
+                ],
+            ],
+        ],
     ],
 ];
+
