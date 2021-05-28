@@ -15,6 +15,14 @@ return [
     ],
 
     'doctrine' => [
+        'configuration' => [
+            'orm_default' => [
+                'result_cache' => 'filesystem',
+                'metadata_cache' => 'filesystem',
+                'query_cache' => 'filesystem',
+                'hydration_cache' => 'filesystem',
+            ],
+        ],
         'driver' => [
             'orm_default' => [
                 'class'   => MappingDriverChain::class,
@@ -24,8 +32,14 @@ return [
             ],
             'entities'    => [
                 'class' => AnnotationDriver::class,
-                'cache' => 'array',
+                'cache' => 'filesystem',
                 'paths' => ['src/App/Entity'],
+            ],
+        ],
+        'cache' => [
+            'filesystem' => [
+                'class' => Doctrine\Common\Cache\FilesystemCache::class,
+                'directory' => 'var/cache/doctrine',
             ],
         ],
     ],

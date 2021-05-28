@@ -8,4 +8,7 @@ $aggregator = new ConfigAggregator([
 ],
 'var/config-cache.php');
 
+
+//var_dump($aggregator->getMergedConfig()['doctrine']['cache']);
+
 return $aggregator->getMergedConfig();

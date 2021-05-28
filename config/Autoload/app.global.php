@@ -1,5 +1,7 @@
 <?php
 
+//закончил 4-55
+
 use Framework\Http\Application;
 use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
 use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
@@ -35,5 +37,4 @@ return [
     ],
 
     'debug' => false,
-
 ];

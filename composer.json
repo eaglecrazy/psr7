@@ -52,6 +52,6 @@
         "cs-fix": "phpcbf",
         "serve": "php -S 0.0.0.0:8080 -t public",
         "dev": "ln -sr config/Autoload/development.local.php.dist config/Autoload/development.local.php",
-        "prod": "rm config/Autoload/development.local.php"
+        "prod": "rm config/Autoload/zdevelopment.local.php"
     }
 }
