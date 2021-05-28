@@ -21,13 +21,12 @@ class PostReadRepository
      * @return PostView[]
      * @throws Exception
      */
-    public function getAll(): array
+    public function getAll(int $limit = 10, int $offset = 0): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM posts ORDER BY date DESC ');
+        $stmt = $this->pdo->prepare('SELECT * FROM posts ORDER BY id DESC LIMIT ? OFFSET ?');
+        $stmt->execute([$limit, $offset]);
 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return array_map([$this, 'hydratePost'], $rows);
+        return array_map([$this, 'hydratePost'], $stmt->fetchAll());
     }
 
     /**
@@ -58,5 +57,11 @@ class PostReadRepository
         $view->content = $row['content'];
 
         return $view;
+    }
+
+    public function countAll()
+    {
+        $stmt = $this->pdo->query('select COUNT(id) FROM posts');
+        return $stmt->fetchColumn();
     }
 }

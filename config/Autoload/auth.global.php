@@ -9,10 +9,4 @@ return [
             BasicAuthMiddleware::class => BasicAuthMiddlewareFactory::class,
         ],
     ],
-
-    'auth'  => [
-        'users' => [
-            'admin' => 'password'
-        ],
-    ],
 ];
