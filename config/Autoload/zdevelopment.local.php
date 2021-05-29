@@ -36,7 +36,7 @@ return [
 
     'console' => [
         'commands' => [
-            FixtureCommand::class,
+//            FixtureCommand::class,
         ],
 
         'debug' => true,

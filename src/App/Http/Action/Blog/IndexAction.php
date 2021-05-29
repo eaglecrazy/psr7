@@ -32,7 +32,8 @@ class IndexAction implements RequestHandlerInterface
     }
 
     /**
-     * @throws Exception
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -43,6 +44,7 @@ class IndexAction implements RequestHandlerInterface
         );
 
         $posts = $this->posts->all($pager->getLimit(), $pager->getOffset());
+
 
         return new HtmlResponse($this->template->render('app/blog/index', [
             'posts' => $posts,

@@ -17,7 +17,7 @@ return [
     'dependencies' => [
         'factories' => [
             CacheClearCommand::class => CacheClearCommandFactory::class,
-            DiffCommand::class       => DiffCommandFactory::class,
+//            DiffCommand::class       => DiffCommandFactory::class,
 
         ],
     ],
@@ -36,7 +36,7 @@ return [
         'cachePaths' => [
             'twig'     => 'var/cache/twig',
             'log'      => 'var/log',
-            'doctrine' => 'var/cache/doctrine',
+//            'doctrine' => 'var/cache/doctrine',
         ],
     ],
 ];

@@ -1,6 +1,6 @@
 <?php
 
-//закончил 4-55
+
 
 use Framework\Http\Application;
 use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
@@ -31,8 +31,6 @@ return [
             ErrorHandlerMiddleware::class => ErrorHandlerMiddlewareFactory::class,
             ErrorResponseGenerator::class => PrettyErrorResponseGeneratorFactory::class,
             LoggerInterface::class        => LoggerFactory::class,
-
-            PostReadRepository::class => PostReadRepositoryFactory::class,
         ],
     ],
 

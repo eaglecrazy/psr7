@@ -127,4 +127,5 @@ class Post
     {
         return $this->comments->count();
     }
+
 }

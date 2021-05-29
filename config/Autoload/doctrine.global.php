@@ -10,7 +10,7 @@ return [
     'dependencies' => [
         'factories' => [
             EntityManagerInterface::class => EntityManagerFactory::class,
-            PDO::class                    => PDOFactory::class,
+
         ],
     ],
 
