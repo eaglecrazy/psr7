@@ -23,6 +23,12 @@ return [
                 'hydration_cache' => 'filesystem',
             ],
         ],
+        'connection' => [
+            'orm_default' => [
+                'driver_class' => \Doctrine\DBAL\Driver\PDOSqlite\Driver::class,
+                'pdo' => PDO::class,
+            ],
+        ],
         'driver' => [
             'orm_default' => [
                 'class'   => MappingDriverChain::class,

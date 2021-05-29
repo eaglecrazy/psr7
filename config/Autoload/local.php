@@ -14,5 +14,10 @@ return [
             ],
         ],
     ],
+    'pdo' => [
+        'dsn' => 'sqlite:db/db.sqlite',
+        'username' => '',
+        'password' => '',
+    ],
 ];
 
