@@ -1,8 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-
-ЗАКОНЧИЛ 5-22
+ЗАКОНЧИЛ 5-36
 
 use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use Doctrine\ORM\EntityManagerInterface;

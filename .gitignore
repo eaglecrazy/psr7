@@ -2,3 +2,4 @@
 vendor
 node modules
 var
+/node_modules/
