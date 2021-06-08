@@ -10,6 +10,7 @@ return [
         'factories' => [
             TemplateRenderer::class => TemplateRendererFactory::class,
             Environment::class => TwigEnvironmentFactory::class,
+            Stormiix\Twig\Extension\MixExtension::class => Infrastructure\App\Twig\MixExtensionFactory::class,
         ],
     ],
 
@@ -20,7 +21,14 @@ return [
     'twig' => [
         'template_dir' => 'templates',
         'cache_dir'    => 'var/cache/twig',
-        'extensions'   => [],
+        'extensions' => [
+            Stormiix\Twig\Extension\MixExtension::class,
+        ],
+    ],
+
+    'mix' => [
+        'root' => 'public/build',
+        'manifest' => 'mix-manifest.json',
     ],
 
     'cachePaths' => [
